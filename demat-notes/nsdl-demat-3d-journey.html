@@ -14,6 +14,7 @@
   --bg-pro:#CECBF6; --text-pro:#3C3489; --border-pro:#534AB7;
   --bg-success:#C0DD97; --text-success:#27500A; --border-success:#3B6D11;
   --bg-danger:#F7C1C1; --text-danger:#791F1F; --border-danger:#A32D2D;
+  --bg-warning:#FCEFC7; --text-warning:#7A4A05; --border-warning:#C98A0C;
   --radius:8px; --font-mono:'SF Mono',Consolas,monospace;
   --font-sans:-apple-system,'Segoe UI',Roboto,sans-serif;
 }
@@ -63,12 +64,16 @@ h1{font-size:22px;font-weight:600;margin:0 0 6px}
 .pill{display:inline-block;font-size:12px;font-weight:600;padding:3px 10px;border-radius:var(--radius)}
 .step-counter{font-size:12px;color:var(--text-muted);margin-left:auto}
 .step-title{font-size:17px;font-weight:600;margin:0 0 4px}
-.step-desc{font-size:14px;color:var(--text-secondary);margin:0 0 8px;line-height:1.6}
-.endpoint{display:inline-block;font-family:var(--font-mono);font-size:12px;padding:3px 8px;border-radius:var(--radius);margin-bottom:8px}
-.bullets{list-style:none;margin:0 0 8px;padding:0;display:flex;flex-direction:column;gap:5px}
+.step-desc{font-size:14px;color:var(--text-secondary);margin:0 0 10px;line-height:1.6}
+.endpoint{display:inline-block;font-family:var(--font-mono);font-size:12px;padding:3px 8px;border-radius:var(--radius);margin-bottom:10px}
+.section-label{font-size:11px;font-weight:700;color:var(--text-muted);margin:0 0 5px;text-transform:uppercase;letter-spacing:.03em}
+.bullets{list-style:none;margin:0 0 16px;padding:0;display:flex;flex-direction:column;gap:6px}
 .bullets li{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--text-secondary);line-height:1.5}
 .bullets .b-dot{width:6px;height:6px;border-radius:50%;margin-top:6px;flex:none}
-.step-note{font-size:12px;color:var(--text-muted);margin:0;line-height:1.5}
+.goal-line{font-size:13px;color:var(--text-secondary);margin:0 0 16px;line-height:1.6}
+.question-box{display:flex;gap:10px;align-items:flex-start;background:var(--bg-warning);border-radius:var(--radius);padding:12px 14px}
+.question-box i{color:var(--text-warning);font-size:18px;margin-top:1px;flex:none}
+.question-box p{margin:0;font-size:13px;color:var(--text-warning);line-height:1.6;font-weight:500}
 .controls{display:flex;align-items:center;gap:8px;max-width:640px;margin:1.25rem auto 0;flex-wrap:wrap}
 .controls button{height:38px;padding:0 14px;display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;background:var(--surface-1);border:1.5px solid var(--border-strong);border-radius:var(--radius);cursor:pointer;color:var(--text-primary)}
 .controls button:hover{filter:brightness(.97)}
@@ -87,10 +92,10 @@ footer{margin-top:24px;font-size:12px;color:var(--text-muted);text-align:center}
 <body>
 <div class="wrap">
   <h1>NSDL demat account creation — interactive 3D journey</h1>
-  <p class="sub">Press Play to watch it run on loop, or use Prev / Next to step through manually. Stop resets to the beginning. Each phase slides in with its own colour.</p>
+  <p class="sub">Press Play to watch it run on loop, or use Prev / Next to step through manually. Each step shows what moves, what it is trying to achieve, and a question worth sitting with.</p>
   <div class="card">
     <div class="topbar"></div>
-    <h2 class="sr-only">Animated 3D walkthrough of the NSDL demat account creation journey. Each of the three phases slides in with its own colour so phase boundaries are easy to spot.</h2>
+    <h2 class="sr-only">Animated 3D walkthrough of the NSDL demat account creation journey. Each step shows what data moves, what it is trying to achieve, and a thought-provoking question. Each phase slides in with its own colour.</h2>
     <div class="stage">
       <div class="scene" id="scene">
         <div class="scene-backdrop" id="backdrop"></div>
@@ -115,8 +120,11 @@ footer{margin-top:24px;font-size:12px;color:var(--text-muted);text-align:center}
       <p class="step-title" id="step-title">Customer initiates</p>
       <code class="endpoint" id="endpoint" style="display:none"></code>
       <p class="step-desc" id="step-desc"></p>
+      <p class="section-label">What moves here</p>
       <ul class="bullets" id="bullets"></ul>
-      <p class="step-note" id="step-note" style="display:none"></p>
+      <p class="section-label">What it is trying to achieve</p>
+      <p class="goal-line" id="goal-line"></p>
+      <div class="question-box"><i class="ti ti-bulb" aria-hidden="true"></i><p id="question-text"></p></div>
     </div>
     <div class="controls">
       <button id="stop" aria-label="Stop"><i class="ti ti-player-stop" aria-hidden="true"></i>Stop</button>
@@ -147,45 +155,70 @@ footer{margin-top:24px;font-size:12px;color:var(--text-muted);text-align:center}
   function buildSteps(outcome){
     return [
       {phaseIdx:1, title:'Customer initiates', desc:'Customer agrees to consent and submits a bank account number.', pos:'idfc', cat:'request',
-       bullets:['Taps "open demat account using NSDL" ','Agrees to the consent checkbox','send the linked bank account number'],
-       note:'Optional pre-check: an internal call to NSDL via ESB Mule confirms the customer doesn\u2019t already have a Client ID / DP ID.'},
+       bullets:['Consent flag set to true','Bank account number entered by the customer'],
+       goal:'Capture explicit consent and the bank account that will be linked to the new demat account.',
+       question:'What if the customer enters someone else\u2019s bank account by mistake \u2014 at what point does ownership actually get checked, before or after NSDL gets involved?'},
       {phaseIdx:1, title:'Validate customer & signature', endpoint:'POST /api/demat/v2/order/create', desc:'Checks the customer is valid and has a signature on file.', pos:'idfc', cat:'request',
-       bullets:['Confirms UCIC is a valid, active customer ID','Checks the consent flag is true','Verifies a digital signature exists on file'],
-       note:'Any failure here stops the request before it ever reaches NSDL.'},
+       bullets:['UCIC checked against active customer records','Consent flag verified as true','Existing digital signature looked up on file'],
+       goal:'Make sure only a real, consenting, already-verified customer can trigger an NSDL order.',
+       question:'What if a customer\u2019s signature on file is years old, from outdated KYC norms \u2014 does the system accept it silently, or trigger a re-verification?'},
       {phaseIdx:1, title:'Validate account, build payload', desc:'Confirms the bank account, then assembles a signed request.', pos:'idfc', cat:'request',
-       bullets:['Confirms the bank account is real and owned by the customer','Pulls name, PAN, email and mobile from the customer database','Builds the NSDL payload and signs it digitally']},
+       bullets:['Bank account ownership confirmed','Name, PAN, email and mobile pulled from the customer database','Payload assembled and digitally signed'],
+       goal:'Build NSDL a trustworthy, signed package containing exactly what it needs to act.',
+       question:'What if the PAN on file is outdated \u2014 say, after a name change \u2014 does NSDL reject the order outright, or does the mismatch only surface much later?'},
       {phaseIdx:1, title:'Order sent to NSDL', desc:'The signed request travels across to NSDL\u2019s servers.', pos:'nsdl', cat:'request',
-       bullets:['Sent through the middleware / ESB layer','NSDL receives customer and bank account details']},
+       bullets:['Signed payload sent through the middleware / ESB layer','Customer and bank account details now in NSDL\u2019s hands'],
+       goal:'Hand the verified request over to NSDL and start the cross-company workflow.',
+       question:'What if this call times out after NSDL creates the order but before IDFC gets the transaction ID back \u2014 is there any way to recover that orphaned order?'},
       {phaseIdx:1, title:'NSDL opens a temporary order', desc:'NSDL accepts the request and opens a temporary order.', pos:'nsdl', cat:'nsdl',
-       bullets:['Creates a temporary order record','Generates a transaction ID (order reference)']},
+       bullets:['Temporary order record created on NSDL\u2019s side','Transaction ID generated as the order reference'],
+       goal:'Give IDFC a tracking reference before any real account-creation work begins.',
+       question:'What if the customer never returns to finish the NSDL form \u2014 how long does this temporary order stay open, and who is responsible for cleaning it up?'},
       {phaseIdx:1, title:'Transaction ID returned', desc:'NSDL\u2019s response carries the transaction ID back to IDFC.', pos:'idfc', cat:'request',
-       bullets:['Transaction ID returned in the API response','IDFC stores it against the customer record for tracking']},
+       bullets:['Transaction ID returned in the API response','IDFC stores it against the customer record for tracking'],
+       goal:'Let IDFC track this exact request all the way through to its eventual outcome.',
+       question:'What if two requests for the same customer go out close together \u2014 could two valid transaction IDs exist at once, and what happens when both try to save?'},
       {phaseIdx:1, title:'Redirect link generated', desc:'IDFC builds the link that hands the customer to NSDL.', pos:'idfc', cat:'request',
-       bullets:['Builds a unique redirect URL','Optionally notifies downstream systems via event'],
-       note:'Customer now leaves the IDFC app for NSDL\u2019s site.'},
+       bullets:['Unique redirect URL built, carrying the transaction reference','Downstream systems optionally notified via event'],
+       goal:'Smoothly transition the customer from IDFC\u2019s app to NSDL\u2019s own portal.',
+       question:'What if the customer bookmarks or shares this link and someone else opens it later \u2014 does it expire, and is the account holder re-verified on NSDL\u2019s side?'},
       {phaseIdx:2, title:'Customer completes the form on NSDL', desc:'Customer fills the demat application on NSDL\u2019s own portal.', pos:'nsdl', cat:'nsdl',
-       bullets:['Entirely on NSDL\u2019s site \u2014 no IDFC API involved here','Customer enters remaining KYC and nominee details']},
+       bullets:['Entirely on NSDL\u2019s site \u2014 no IDFC API involved here','Customer enters remaining KYC and nominee details'],
+       goal:'Collect the regulatory details NSDL needs that IDFC\u2019s systems don\u2019t already hold.',
+       question:'What if the customer enters different nominee or address details here than what IDFC already has on file \u2014 does anything reconcile the two records?'},
       {phaseIdx:2, title:'NSDL verifies PAN and KYC', desc:'NSDL checks the customer\u2019s identity against official records.', pos:'nsdl', cat:'nsdl',
-       bullets:['Cross-checks PAN against income tax records','Validates KYC details against registries']},
+       bullets:['PAN cross-checked against income tax records','KYC details validated against registries'],
+       goal:'Independently confirm the customer\u2019s identity against authoritative government sources.',
+       question:'What if this check fails because of a data-entry typo at the registry, not actual fraud \u2014 does the customer get a clear, fixable reason, or just a generic rejection?'},
       {phaseIdx:2, title:'Demat account created', desc:'NSDL provisions the account once verification passes.', pos:'nsdl', cat:'nsdl',
-       bullets:['Account is provisioned on NSDL\u2019s depository','Generates a DP ID and a Client ID']},
+       bullets:['Account provisioned on NSDL\u2019s depository','DP ID and Client ID generated'],
+       goal:'Actually create the legally recognized depository account \u2014 the moment it starts to exist.',
+       question:'What if NSDL creates the account successfully but its callback to IDFC never arrives \u2014 does the customer now have a live demat account that IDFC doesn\u2019t even know about?'},
       outcome==='success'
         ? {phaseIdx:3, title:'Success callback to IDFC', endpoint:'POST /api/demat/v1/handleSuccessRedirect', desc:'NSDL calls back with the new account details.', pos:'idfc', cat:'success',
-           bullets:['NSDL sends DP ID, Client ID and a digital signature','IDFC validates the signature to confirm it\u2019s genuinely from NSDL']}
+           bullets:['DP ID, Client ID and a digital signature sent back','IDFC validates the signature before trusting the payload'],
+           goal:'Tell IDFC, in a way it can verifiably trust, exactly what happened on NSDL\u2019s side.',
+           question:'What if someone intercepted or replayed this callback \u2014 what specifically stops a forged success message from marking a non-existent account as live?'}
         : {phaseIdx:3, title:'Failure callback to IDFC', endpoint:'POST /api/demat/v1/handleFailureRedirect', desc:'NSDL calls back to report that creation failed.', pos:'idfc', cat:'failure',
-           bullets:['NSDL sends a failure reason and a digital signature','IDFC validates the signature before processing the error']},
+           bullets:['Failure reason and a digital signature sent back','IDFC validates the signature before processing the error'],
+           goal:'Tell IDFC, in a way it can verifiably trust, exactly what went wrong on NSDL\u2019s side.',
+           question:'What if the failure reason NSDL sends is too generic for the customer to act on \u2014 does IDFC translate it into something fixable, or just relay it as-is?'},
       outcome==='success'
         ? {phaseIdx:3, title:'Saved to database', desc:'The new demat account is recorded against the customer.', pos:'db', cat:'success',
-           bullets:['DP ID and Client ID saved to the customer\u2019s record','Status updated to SUCCESS \u2014 account is live for trading']}
+           bullets:['DP ID and Client ID saved to the customer\u2019s record','Status updated to SUCCESS'],
+           goal:'Make the outcome durable and visible to every other system that depends on it.',
+           question:'What if this database write fails right after NSDL\u2019s callback succeeded \u2014 is there a reconciliation job, or does the customer end up with a live NSDL account and a stale IDFC record?'}
         : {phaseIdx:3, title:'Failure saved to database', desc:'The failure is logged so the customer can retry.', pos:'db', cat:'failure',
-           bullets:['Failure reason and error details saved to the record','Status updated to FAILED \u2014 customer notified to retry']}
+           bullets:['Failure reason and error details saved to the record','Status updated to FAILED'],
+           goal:'Make the failure durable and visible so the customer can be guided to retry.',
+           question:'What if the customer retries immediately \u2014 does the system reuse the old transaction ID, or does every retry start a brand new order on NSDL\u2019s side?'}
     ];
   }
 
   var outcome='success';
   var steps=buildSteps(outcome);
   var current=0, playing=false, timer=null, prevPhaseIdx=null;
-  var DWELL=3200;
+  var DWELL=5200;
 
   var mover=document.getElementById('mover');
   var cube=document.getElementById('cube');
@@ -197,7 +230,8 @@ footer{margin-top:24px;font-size:12px;color:var(--text-muted);text-align:center}
   var stepDesc=document.getElementById('step-desc');
   var endpointEl=document.getElementById('endpoint');
   var bulletsEl=document.getElementById('bullets');
-  var noteEl=document.getElementById('step-note');
+  var goalEl=document.getElementById('goal-line');
+  var questionEl=document.getElementById('question-text');
   var dotsWrap=document.getElementById('dots');
   var playBtn=document.getElementById('play');
   var track2=document.getElementById('track2');
@@ -253,7 +287,8 @@ footer{margin-top:24px;font-size:12px;color:var(--text-muted);text-align:center}
       li.appendChild(dot); li.appendChild(txt);
       bulletsEl.appendChild(li);
     });
-    if(s.note){ noteEl.style.display='block'; noteEl.textContent=s.note; } else { noteEl.style.display='none'; }
+    goalEl.textContent=s.goal;
+    questionEl.textContent=s.question;
     var p=POS[s.pos];
     mover.style.left=p.left+'px';
     mover.style.top=p.top+'px';
