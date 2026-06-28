@@ -218,6 +218,40 @@
   footer{ margin-top:50px; padding-top:20px; border-top:1px solid var(--border); color:var(--ink-dim); font-size:.82rem; }
   footer a{ color:var(--gold); }
 
+  /* ---------- Gallery ---------- */
+  .gallery{ margin-top:14px; }
+  .gallery-frame{
+    position:relative; background:var(--panel-dark); border:1px solid var(--border-soft);
+    border-radius:10px; overflow:hidden; aspect-ratio:16/10;
+  }
+  .gallery-track{ position:relative; width:100%; height:100%; }
+  .gallery-slide{
+    position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    opacity:0; transition:opacity .7s ease; padding:20px; gap:10px;
+  }
+  .gallery-slide.active{ opacity:1; z-index:1; }
+  .gallery-slide img{ max-width:100%; max-height:calc(100% - 36px); object-fit:contain; border-radius:4px; }
+  .gallery-missing{
+    display:none; flex-direction:column; align-items:center; justify-content:center; gap:6px;
+    color:var(--ink-dim); font-family:var(--mono); font-size:.78rem; text-align:center; max-width:80%;
+  }
+  .gallery-missing code{ color:var(--accent); }
+  .gallery-caption{
+    font-family:var(--mono); font-size:.76rem; letter-spacing:.01em; color:var(--ink-dim);
+    text-align:center; max-width:90%;
+  }
+  .gallery-nav{
+    position:absolute; top:50%; transform:translateY(-50%); z-index:2;
+    background:rgba(255,255,255,0.9); border:1px solid var(--border); color:var(--ink);
+    width:36px; height:36px; border-radius:50%; cursor:pointer; font-size:1.2rem; line-height:1;
+  }
+  .gallery-nav:hover{ background:var(--accent); color:#fff; border-color:var(--accent); }
+  .gallery-nav.prev{ left:14px; }
+  .gallery-nav.next{ right:14px; }
+  .gallery-dots{ display:flex; justify-content:center; gap:8px; margin-top:14px; }
+  .gallery-dot{ width:9px; height:9px; border-radius:50%; background:var(--border); cursor:pointer; border:none; padding:0; }
+  .gallery-dot.active{ background:var(--accent); }
+
   @media (max-width:640px){
     .titleblock{ padding:20px; }
     .titleblock h1{ font-size:1.5rem; }
@@ -280,6 +314,18 @@
   <div class="section-heading"><span class="num">02</span><h2>Detailed Flows &amp; Notes</h2></div>
   <p class="section-intro">Each card below is a self-contained flow: a short explainer, a Mermaid sequence diagram, a plain-text rough sketch (for quick scanning / no-JS fallback), and any relevant tables. Most cards also have two click-to-reveal boxes — <b style="color:var(--accent)">🎯 What You'll Learn</b> (read before the diagram) and <b style="color:var(--gold)">🤔 Thoughtful Questions</b> (try after). The last card is a standalone set of whole-system questions that only make sense once you've seen everything.</p>
   <div id="sections-root"></div>
+
+  <!-- ============ GALLERY ============ -->
+  <div class="section-heading"><span class="num">18</span><h2>📸 Source Diagram Gallery</h2></div>
+  <p class="section-intro">The original whiteboard / screenshot diagrams this entire document was built from. Auto-advances every 4 seconds — hover to pause, or use the arrows / dots to browse manually.</p>
+  <div class="gallery" id="gallery">
+    <div class="gallery-frame">
+      <div class="gallery-track" id="gallery-track"></div>
+      <button class="gallery-nav prev" onclick="galleryStep(-1)" aria-label="Previous image">‹</button>
+      <button class="gallery-nav next" onclick="galleryStep(1)" aria-label="Next image">›</button>
+    </div>
+    <div class="gallery-dots" id="gallery-dots"></div>
+  </div>
 
   <footer>
     <p><b>How to edit this file:</b> open the &lt;script&gt; block near the bottom of the HTML and edit the <code>SECTIONS</code> array (one object per card — <code>body</code> is plain HTML, <code>mermaid</code> is Mermaid sequence-diagram syntax, <code>sketch</code> is a plain-text rough diagram) or the <code>MINDMAP</code> object (the roadmap tree). The page re-renders entirely from this data, so no other markup needs to change.</p>
@@ -924,8 +970,68 @@ Response:
     table: null
   },
   {
-    id: "sec-synthesis",
+    id: "sec-reconciliation",
     code: "15",
+    title: "Reconciliation Needed (diagram vs. written contract)",
+    blurb: "Points where the whiteboard sequence diagrams and the written API-contracts note don't line up exactly — flagged rather than silently resolved.",
+    learn: [
+      "How to read a sequence diagram and a written spec side by side and spot where they quietly disagree",
+      "Why \"the diagram is probably outdated\" and \"the contract is probably outdated\" are both dangerous assumptions",
+      "A concrete checklist of unresolved questions that need an owner before this ships"
+    ],
+    questions: [
+      "Of these 8 discrepancies, which one would actually break the integration in production if left unresolved, versus which ones are just naming/documentation drift?",
+      "Whose job is it to resolve item #3 (Kong vs. Mule routing) — IDFC's platform team, PB's integration team, or does it need both in the same room?",
+      "If you had to ship with only 3 of these 8 items resolved, which 3 would you prioritize, and why?"
+    ],
+    body: ``,
+    sketch: null,
+    mermaid: null,
+    table: {
+      headers: ["#", "Diagram says", "Written contract says", "Confirm"],
+      rows: [
+        ["1", "<code>getRedirectionURL</code> is a <b>GET</b>", "It's a <b>POST</b> with a <code>{Token}</code> body", "Which verb is final"],
+        ["2", "<code>GET /user-info</code> with just Bearer STS-token", "Needs STS token <b>+</b> a separately-minted EntAuth token", "Update auth assumption everywhere this repeats"],
+        ["3", "<code>/journey-status</code> routed via <b>Kong</b>", "Auth is \"same as other APIs (<b>with Mule</b>)\"", "Whether Mule fronts this call instead of/alongside Kong"],
+        ["4", "—", "<code>getPolicies</code> has two different request shapes documented", "Pick one final contract"],
+        ["5", "Flow 8 design is finalized", "<code>publishClevertapEvent</code> wire contract marked <b>TBD</b>", "Design ≠ contract yet — contract still needed"],
+        ["6", "—", "Base URLs for <code>insurance/v1/*</code> depend on \"Mule confirmation\"", "Get final base URL once Mule team confirms"],
+        ["7", "—", "PB's redirection domain is temporary/QA", "Get production domain, then whitelist + ISG approval"],
+        ["8", "—", "PB's own APIs use a hardcoded bearer token", "Confirm QA-only, production scheme to follow"]
+      ]
+    }
+  },
+  {
+    id: "sec-future",
+    code: "16",
+    title: "Future Scope & Open Items",
+    blurb: "What's designed but not yet live, and what's still pending confirmation.",
+    learn: [
+      "The difference between \"designed\" and \"production-ready\" — and why this document carefully distinguishes the two",
+      "What's genuinely blocking MVP go-live today, versus what's a nice-to-have for later",
+      "How to turn a list of open items into a tracked action plan with owners"
+    ],
+    questions: [
+      "Of these six open items, which ones are blocking MVP go-live, and which ones could ship later without breaking anything?",
+      "If you had to pick just one owner (you, Shreyas, the Mule team, or PB) to chase down by end of week, which open item would you escalate first?",
+      "A year from now, which of these \"future scope\" items do you think will still be open, and why?"
+    ],
+    body: `
+      <ul>
+        <li><b>CleverTap integration</b> — design finalized (Flow 8), but the <code>publishClevertapEvent</code> wire contract is still <b>TBD</b>. Not yet part of MVP rollout.</li>
+        <li><b>PB redirection domain</b> — currently QA/temporary; pending PB sharing the production domain, then IDFC whitelisting + ISG temporary approval.</li>
+        <li><b>Base URL confirmation</b> — <code>insurance/v1/*</code> APIs are pending final base URL from the Mule team.</li>
+        <li><b>Kong vs. Mule routing</b> — confirm which gateway layer fronts <code>getUserDetailsForPolicyBazaar</code> and <code>policyStatusChangeEvent</code>.</li>
+        <li><b><code>getPolicies</code> contract</b> — two competing request shapes documented; needs to be narrowed to one.</li>
+        <li><b>Production-grade auth for PB's own APIs</b> — <code>getRedirectionURL</code> / <code>getPolicies</code> currently use a hardcoded bearer token; confirm this isn't carried into production.</li>
+      </ul>`,
+    sketch: null,
+    mermaid: null,
+    table: null
+  },
+  {
+    id: "sec-synthesis",
+    code: "17",
     title: "🧩 Thoughtful Questions — Test Your Whole-System Understanding",
     blurb: "No single flow above answers these on its own — that's the point. These only click once you can hold the whole system in your head at once.",
     body: `
@@ -990,17 +1096,37 @@ const MINDMAP = {
       children: [
         { label: "Component Glossary", target: "sec-glossary" },
         { label: "API Reference (summary)", target: "sec-api" },
-        { label: "API Contracts — Detailed Payloads", target: "sec-contracts" }
+        { label: "API Contracts — Detailed Payloads", target: "sec-contracts" },
+        { label: "Reconciliation Needed", target: "sec-reconciliation" },
+        { label: "Future Scope & Open Items", target: "sec-future" }
       ]
     },
     {
       label: "Reflection",
       children: [
-        { label: "🧩 Thoughtful Questions — Whole-System Test", target: "sec-synthesis" }
+        { label: "🧩 Thoughtful Questions — Whole-System Test", target: "sec-synthesis" },
+        { label: "📸 Source Diagram Gallery", target: "gallery" }
       ]
     }
   ]
 };
+
+/* Source diagram gallery — edit this list to match whatever is actually
+   inside your local "images" folder. Add, remove, re-order, or re-caption
+   freely; the gallery re-renders entirely from this array. Paths are
+   relative to this HTML file, so keep an "images" folder next to it. */
+const GALLERY_IMAGES = [
+  { src: "images/WhatsApp_Image_2026-06-28_at_1_16_48_PM.jpeg",
+    caption: "Source 1 — Optimus Services: Buy Insurance CTA → SSO Redirect (Flow 1) + start of Get User Info opt block (Flow 2)" },
+  { src: "images/WhatsApp_Image_2026-06-28_at_1_17_18_PM.jpeg",
+    caption: "Source 2 — Get User Info (cont.), Keep-Alive Loop (Flow 3), Journey Status Update (Flow 4)" },
+  { src: "images/WhatsApp_Image_2026-06-28_at_1_17_39_PM.jpeg",
+    caption: "Source 3 — Redirect Back to App + Fetch Current Policies (Flow 5–6)" },
+  { src: "images/89b0e8c8-2382-4ebd-8f2f-8c23f93f5673.jpeg",
+    caption: "Source 4 — PB CleverTap Event Integration (Flow 8)" },
+  { src: "images/19c7961a-f112-4ce1-9b6e-a6f8f0bd6036.jpeg",
+    caption: "Source 5 — Policy Persistence Pattern: First-Time Purchase & Subsequent Logins (Flow 7)" }
+];
 
 /* ====================================================================
    RENDERING — no need to touch anything below this line.
@@ -1090,8 +1216,51 @@ function jumpTo(e, targetId){
 
 /* Content always renders first, independent of whether the Mermaid CDN
    script loaded - so a blocked/offline CDN never breaks the page. */
+let galleryIndex = 0;
+let galleryTimer = null;
+
 renderSections();
 renderMindmap();
+renderGallery();
+
+function renderGallery(){
+  const track = document.getElementById("gallery-track");
+  const dots = document.getElementById("gallery-dots");
+  if (!track || !GALLERY_IMAGES.length) return;
+
+  track.innerHTML = GALLERY_IMAGES.map((g, i) => `
+    <div class="gallery-slide${i === 0 ? " active" : ""}" data-i="${i}">
+      <img src="${g.src}" alt="${g.caption}"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      <div class="gallery-missing">⚠ Image not found:<br><code>${g.src}</code><br>
+        <span>Check the filename against your local <code>images/</code> folder.</span></div>
+      <div class="gallery-caption">${g.caption}</div>
+    </div>`).join("");
+
+  dots.innerHTML = GALLERY_IMAGES.map((_, i) =>
+    `<button class="gallery-dot${i === 0 ? " active" : ""}" onclick="galleryGoto(${i})" aria-label="Go to image ${i + 1}"></button>`
+  ).join("");
+
+  startGalleryAuto();
+  const frame = document.querySelector(".gallery-frame");
+  if (frame){
+    frame.addEventListener("mouseenter", () => clearInterval(galleryTimer));
+    frame.addEventListener("mouseleave", () => startGalleryAuto());
+  }
+}
+
+function showGallerySlide(i){
+  const slides = document.querySelectorAll(".gallery-slide");
+  const dots = document.querySelectorAll(".gallery-dot");
+  if (!slides.length) return;
+  galleryIndex = (i + slides.length) % slides.length;
+  slides.forEach((s, idx) => s.classList.toggle("active", idx === galleryIndex));
+  dots.forEach((d, idx) => d.classList.toggle("active", idx === galleryIndex));
+}
+function galleryStep(dir){ showGallerySlide(galleryIndex + dir); restartGalleryAuto(); }
+function galleryGoto(i){ showGallerySlide(i); restartGalleryAuto(); }
+function startGalleryAuto(){ galleryTimer = setInterval(() => showGallerySlide(galleryIndex + 1), 4000); }
+function restartGalleryAuto(){ clearInterval(galleryTimer); startGalleryAuto(); }
 
 function markMermaidUnavailable(reason){
   document.querySelectorAll(".mermaid-host").forEach(el => {
