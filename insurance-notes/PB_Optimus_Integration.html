@@ -9,18 +9,18 @@
 <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
 <style>
   :root{
-    --bg:#0A1A2C;
-    --grid:rgba(127,219,255,0.07);
-    --panel:#0F2A47;
-    --panel-2:#123250;
-    --panel-dark:#081827;
-    --border:#1F4068;
-    --border-soft:#173A5E;
-    --ink:#DCE8F2;
-    --ink-dim:#86A2BC;
-    --accent:#5CC8FF;
-    --accent-dim:#3A87AD;
-    --gold:#F2B441;
+    --bg:#FFFFFF;
+    --grid:rgba(27,111,184,0.06);
+    --panel:#F6F8FC;
+    --panel-2:#EEF2F9;
+    --panel-dark:#F0F4FA;
+    --border:#C9D6E8;
+    --border-soft:#DCE6F2;
+    --ink:#16263B;
+    --ink-dim:#5C7088;
+    --accent:#1B6FB8;
+    --accent-dim:#7FA8CC;
+    --gold:#946408;
     --mono:'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
     --sans:'Inter', system-ui, -apple-system, sans-serif;
     --display:'Space Grotesk', var(--sans);
@@ -62,14 +62,14 @@
   .tb-right{ flex:0 0 auto; align-self:flex-start; }
   table.tb-table{ border-collapse:collapse; font-family:var(--mono); font-size:.78rem; }
   table.tb-table td{ border:1px solid var(--border-soft); padding:6px 12px; }
-  table.tb-table td:first-child{ color:var(--ink-dim); letter-spacing:.06em; background:rgba(255,255,255,0.02); }
+  table.tb-table td:first-child{ color:var(--ink-dim); letter-spacing:.06em; background:rgba(11,40,70,0.03); }
   table.tb-table td:last-child{ color:var(--accent); }
 
   /* ---------- Toolbar ---------- */
   .toolbar{
     position:sticky; top:10px; z-index:50;
     display:flex; flex-wrap:wrap; gap:10px; align-items:center;
-    background:rgba(15,42,71,0.92); backdrop-filter:blur(6px);
+    background:rgba(255,255,255,0.9); backdrop-filter:blur(6px);
     border:1px solid var(--border); border-radius:8px;
     padding:12px 14px; margin-bottom:26px;
   }
@@ -78,9 +78,9 @@
     background:transparent; border:1px solid var(--accent-dim); color:var(--accent);
     padding:7px 13px; border-radius:5px; cursor:pointer; text-decoration:none; white-space:nowrap;
   }
-  .btn:hover{ background:rgba(92,200,255,0.12); border-color:var(--accent); }
+  .btn:hover{ background:rgba(27,111,184,0.1); border-color:var(--accent); }
   .btn.gold{ border-color:var(--gold); color:var(--gold); }
-  .btn.gold:hover{ background:rgba(242,180,65,0.12); }
+  .btn.gold:hover{ background:rgba(148,100,8,0.12); }
   .toolbar-sep{ width:1px; height:20px; background:var(--border); margin:0 4px; }
   .pillrow{ display:flex; flex-wrap:wrap; gap:6px; }
   .pill{
@@ -108,7 +108,7 @@
     display:inline-block; margin-bottom:22px; padding:13px 22px;
     background:var(--panel-2); border:2px solid var(--accent); border-radius:8px;
     font-family:var(--display); font-weight:700; letter-spacing:.02em; color:var(--accent);
-    box-shadow:0 0 0 4px rgba(92,200,255,0.08);
+    box-shadow:0 0 0 4px rgba(27,111,184,0.1);
   }
   ul.tree{ list-style:none; margin:0; padding-left:22px; }
   .mindmap-wrap > ul.tree{ padding-left:0; }
@@ -148,19 +148,52 @@
   .card > summary::before{ content:'▸'; color:var(--accent); transition:transform .18s ease; flex:0 0 auto; font-size:.85rem; }
   .card[open] > summary::before{ transform:rotate(90deg); }
   .code-chip{
-    font-family:var(--mono); color:var(--gold); background:rgba(242,180,65,0.08);
-    border:1px solid rgba(242,180,65,0.32); border-radius:4px; padding:2px 8px; font-size:.74rem; flex:0 0 auto;
+    font-family:var(--mono); color:var(--gold); background:rgba(148,100,8,0.08);
+    border:1px solid rgba(148,100,8,0.32); border-radius:4px; padding:2px 8px; font-size:.74rem; flex:0 0 auto;
   }
   .card-body{ padding:2px 22px 24px 43px; border-top:1px dashed var(--border-soft); }
   .blurb{ color:var(--ink-dim); font-size:.88rem; margin:14px 0 12px; font-style:italic; }
   .card-body p{ margin:0 0 12px; font-size:.95rem; }
   .card-body ul{ margin:0 0 14px; padding-left:20px; font-size:.95rem; }
+  .card-body ol{ margin:0 0 14px; padding-left:22px; font-size:.95rem; }
   .card-body li{ margin-bottom:5px; }
   .note{
-    background:rgba(242,180,65,0.07); border:1px solid rgba(242,180,65,0.3); border-radius:6px;
+    background:rgba(148,100,8,0.06); border:1px solid rgba(148,100,8,0.28); border-radius:6px;
     padding:10px 14px; font-size:.86rem; color:var(--ink); margin:14px 0;
   }
   .note b{ color:var(--gold); }
+
+  .learn-box{
+    background:rgba(27,111,184,0.05); border:1px solid rgba(27,111,184,0.22); border-radius:6px;
+    margin:14px 0 16px; overflow:hidden;
+  }
+  .learn-box > summary{
+    list-style:none; cursor:pointer; padding:11px 16px;
+    font-family:var(--mono); font-size:.72rem; letter-spacing:.08em; text-transform:uppercase; font-weight:600; color:var(--accent);
+    display:flex; align-items:center; gap:8px;
+  }
+  .learn-box > summary::-webkit-details-marker{ display:none; }
+  .learn-box > summary::before{ content:'▸'; transition:transform .18s ease; font-size:.75rem; }
+  .learn-box[open] > summary::before{ transform:rotate(90deg); }
+  .learn-box .lcount{ color:var(--ink-dim); font-weight:400; text-transform:none; letter-spacing:0; }
+  .learn-box ul{ margin:0; padding:2px 16px 14px 34px; font-size:.91rem; }
+  .learn-box li{ margin-bottom:6px; color:var(--ink); }
+
+  .qbox{
+    margin-top:20px; background:rgba(148,100,8,0.04); border:1px solid rgba(148,100,8,0.26);
+    border-radius:6px; overflow:hidden;
+  }
+  .qbox > summary{
+    list-style:none; cursor:pointer; padding:11px 16px;
+    font-family:var(--mono); font-size:.82rem; font-weight:600; color:var(--gold);
+    display:flex; align-items:center; gap:8px;
+  }
+  .qbox > summary::-webkit-details-marker{ display:none; }
+  .qbox > summary::before{ content:'▸'; transition:transform .18s ease; font-size:.75rem; }
+  .qbox[open] > summary::before{ transform:rotate(90deg); }
+  .qcount{ color:var(--ink-dim); font-weight:400; }
+  .qbox ol{ margin:0; padding:2px 18px 16px 36px; font-size:.9rem; }
+  .qbox li{ margin-bottom:10px; color:var(--ink); }
 
   .diagram-block, .sketch-block, .table-wrap{ margin:18px 0; }
   .diagram-label{
@@ -180,7 +213,7 @@
   .table-wrap table{ width:100%; border-collapse:collapse; font-size:.86rem; }
   .table-wrap th{ text-align:left; color:var(--gold); border-bottom:1px solid var(--border); padding:8px 10px; font-family:var(--mono); font-size:.74rem; letter-spacing:.05em; text-transform:uppercase; }
   .table-wrap td{ padding:8px 10px; border-bottom:1px solid var(--border-soft); color:var(--ink); vertical-align:top; }
-  .table-wrap td code, .card-body code{ font-family:var(--mono); color:var(--accent); background:rgba(92,200,255,0.08); padding:1px 5px; border-radius:3px; font-size:.85em; }
+  .table-wrap td code, .card-body code{ font-family:var(--mono); color:var(--accent); background:rgba(27,111,184,0.08); padding:1px 5px; border-radius:3px; font-size:.85em; }
 
   footer{ margin-top:50px; padding-top:20px; border-top:1px solid var(--border); color:var(--ink-dim); font-size:.82rem; }
   footer a{ color:var(--gold); }
@@ -212,7 +245,7 @@
     <div class="tb-right">
       <table class="tb-table">
         <tr><td>DWG&nbsp;NO</td><td>PB-OPTIMUS-INT-002</td></tr>
-        <tr><td>REV</td><td>3.0</td></tr>
+        <tr><td>REV</td><td>3.1</td></tr>
         <tr><td>DATE</td><td>28 Jun 2026</td></tr>
         <tr><td>STATUS</td><td>Living document</td></tr>
       </table>
@@ -245,7 +278,7 @@
 
   <!-- ============ DETAILED FLOWS (rendered by JS) ============ -->
   <div class="section-heading"><span class="num">02</span><h2>Detailed Flows &amp; Notes</h2></div>
-  <p class="section-intro">Each card below is a self-contained flow: a short explainer, a Mermaid sequence diagram, a plain-text rough sketch (for quick scanning / no-JS fallback), and any relevant tables.</p>
+  <p class="section-intro">Each card below is a self-contained flow: a short explainer, a Mermaid sequence diagram, a plain-text rough sketch (for quick scanning / no-JS fallback), and any relevant tables. Most cards also have two click-to-reveal boxes — <b style="color:var(--accent)">🎯 What You'll Learn</b> (read before the diagram) and <b style="color:var(--gold)">🤔 Thoughtful Questions</b> (try after). The last card is a standalone set of whole-system questions that only make sense once you've seen everything.</p>
   <div id="sections-root"></div>
 
   <footer>
@@ -275,7 +308,7 @@ const SYSTEM_MAP = `flowchart LR
     IS --> ET[Event Tracker Service]
     ET --> CT[(CleverTap)]
     IS <--> ODB[(Optimus DB)]
-    classDef store fill:#123250,stroke:#5CC8FF,color:#DCE8F2;
+    classDef store fill:#EAF1FA,stroke:#1B6FB8,color:#16263B;
     class PB,KAFKA,ODB,CT store;`;
 
 const SECTIONS = [
@@ -284,6 +317,18 @@ const SECTIONS = [
     code: "00",
     title: "Architecture & Hosting",
     blurb: "SaaS model, dedicated AWS account, IDFC-owned code — PB is fully white-labeled and invisible to the end user.",
+    learn: [
+      "Why IDFC chose a dedicated AWS account instead of a shared multi-tenant PB environment",
+      "What \"white-labeled\" really means for this integration, end to end",
+      "Who owns the code vs. who operates the infrastructure — and why that split matters",
+      "The trade-offs of letting an external SaaS vendor build something inside your own cloud account"
+    ],
+    questions: [
+      "If PolicyBazaar manages and provisions the AWS account, but IDFC owns the source code and pipelines, who is actually accountable if there's a security incident — and how would you find out fast?",
+      "Why might a bank insist on \"not multi-tenant, dedicated for IDFC only\" even though it's more expensive than a shared SaaS model?",
+      "What's one risk of being fully white-labeled (the user never sees \"PolicyBazaar\" anywhere) if something goes wrong mid-journey — how would a support agent even know which vendor to escalate to?",
+      "If you had to justify this architecture to an auditor in one sentence, what would you say is the single biggest control IDFC retains over its own AWS account?"
+    ],
     body: `
       <div class="table-wrap"><table>
         <tr><th>Aspect</th><th>Detail</th></tr>
@@ -304,6 +349,18 @@ const SECTIONS = [
     code: "F1",
     title: "Flow 1 — Buy Insurance CTA → SSO Redirect",
     blurb: "User taps Buy Insurance → a chain of redirect-URL lookups → PB opens inside a WebView via SSO.",
+    learn: [
+      "Why a \"single click\" turns into five hops before the user sees anything",
+      "What an STS token actually proves, and who trusts it",
+      "The difference between a redirect URL and an SSO token, and why both are needed",
+      "Where this chain could break, and what the user would see if it did"
+    ],
+    questions: [
+      "Why does Optimus go through Insurance Service → EA/STS → Integration Service → Kong → PB instead of calling PB directly for the redirect URL?",
+      "What happens to the user experience if the EA/STS Service is down for 2 seconds during this exact chain — where does the failure show up first?",
+      "The STS-token is minted once at the start of this flow but reused in Flows 2, 3, 4, and 8. What does that tell you about how tightly coupled the rest of the integration is to this single moment?",
+      "If you were asked to add a \"retry\" button for this flow, which single hop would you instrument first, and why?"
+    ],
     body: `<p>The STS-token minted here is the thread that ties every later call (user-info, keep-alive, journey-status, clevertap-event) back to this user's session.</p>
       <div class="note"><b>Confirmed contract (PB-side):</b> the final hop is PB's own <code>getRedirectionURL</code> API — <code>POST https://idfchealthqa.internalpb.com/api/Health/GetIDFCURL</code> with body <code>{Token: STS-token}</code>, returning <code>{RedirectionURL: ...}</code>. Note this is documented as a <b>POST</b>, not the <b>GET</b> shown above — see §15 Reconciliation. Full payload in §14.</div>`,
     sketch:
@@ -342,6 +399,18 @@ OptimusApp opens WebView(url) -> SSO with STS-token -> PB journey loads`,
     code: "F2",
     title: "Flow 2 — PB Fetches User Info",
     blurb: "Inside the WebView, PB calls back into IDFC via Kong to fetch the logged-in user's profile.",
+    learn: [
+      "Why PB calls back into IDFC instead of IDFC pushing data to PB upfront",
+      "How a Bearer token gets validated without IDFC ever calling PB's servers",
+      "What \"claims\" means in this context and why they matter more than the raw token",
+      "Where personally identifiable customer data (PAN, address, CKYC) actually leaves IDFC's boundary"
+    ],
+    questions: [
+      "Why is \"pull\" (PB calls /user-info when it needs data) a safer design here than \"push\" (Optimus sending the full profile to PB upfront)?",
+      "If the STS-token is valid but the underlying Optimus session has since logged out, what should happen — and does the current design actually guarantee that?",
+      "This is the exact moment a customer's PAN, address, and CKYC number leave IDFC's systems. What's the minimum data PB actually needs to sell insurance, and is this API sending more than that?",
+      "What's the blast radius if this single API response were ever logged in plaintext by mistake on PB's side?"
+    ],
     body: `<div class="note">If the STS-token has expired (session inactive), EA/STS marks it invalid and Insurance Service returns an <b>error</b> to PB instead of UserInfo.</div>
       <div class="note"><b>Confirmed contract:</b> real API name is <code>getUserDetailsForPolicyBazaar</code> (<code>GET insurance/v1/getUserDetailsForPolicyBazaar</code>). Auth is a <b>two-token handshake</b>, not just "Bearer STS-token": PB first calls a separate <b>EntAuth API</b> to mint an EntAuth token, then calls this API with <i>both</i> the EntAuth token and the STS token (header param <code>stsToken</code>) in headers. Errors: <code>401</code> invalid STS token, <code>500</code> other failures. Full response schema (KYC/address/account fields) in §14.</div>`,
     sketch:
@@ -373,6 +442,18 @@ Insurance Service --UserInfo--> Kong --UserInfo--> PB`,
     code: "F3",
     title: "Flow 3 — Keep-Alive Loop",
     blurb: "PB pings IDFC every ~3 minutes to keep the session/token from expiring mid-journey.",
+    learn: [
+      "Why a session needs an active heartbeat instead of just a long expiry time",
+      "What \"every 3 minutes\" is really protecting against",
+      "The trade-off between session security and user convenience in a long insurance form",
+      "How a forgotten browser tab interacts with this loop"
+    ],
+    questions: [
+      "Why 3 minutes and not 30 seconds or 30 minutes — what's actually being traded off here?",
+      "If a user fills a long health-declaration form for 10 minutes without touching the screen, does the keep-alive call alone keep their session \"genuinely\" active, or just technically alive?",
+      "What happens to a half-filled insurance application if the keep-alive call fails twice in a row — does PB have any way to warn the user before the token actually expires?",
+      "Is keep-alive PB's responsibility to call, or Optimus's responsibility to extend automatically — and what does today's design imply about who's accountable for session continuity?"
+    ],
     body: `<div class="note"><b>Confirmed contract:</b> <code>POST https://app.auth.idfcfirstbank.com/api/session-transfer/v2/session/keepalive</code> — empty body, <code>Authorization: Bearer &lt;STS-token&gt;</code>. Response: <code>200</code> with empty body. Error: <code>401</code> if the token is invalid.</div>`,
     sketch:
 `every 3 min:  PB --POST /keep-alive(STS-token)--> Kong --validate--> EA/STS --valid--> Kong --200 OK--> PB`,
@@ -395,6 +476,18 @@ Insurance Service --UserInfo--> Kong --UserInfo--> PB`,
     code: "F4",
     title: "Flow 4 — Journey Status Update",
     blurb: "When the user completes a purchase inside PB, PB proactively notifies IDFC.",
+    learn: [
+      "Why PB proactively tells Optimus about a purchase instead of waiting to be asked",
+      "What \"for UCIC\" really means as a storage key, and why it's not the PB userId",
+      "How this single write enables the entire \"skip PB if not needed\" optimization later",
+      "The risk of a missed or duplicate journey-status call"
+    ],
+    questions: [
+      "What happens to a real customer if this webhook-style call from PB never arrives — does Optimus have any fallback way to learn the purchase happened?",
+      "Why save against UCIC rather than the external userId used everywhere else in the integration?",
+      "If PB calls this API twice for the same purchase (a common webhook failure mode), is the current design safe to call twice, or could it cause a problem?",
+      "This is the one place PB pushes data into IDFC unprompted. Why does that make it more important to validate than the calls where PB is just reading data?"
+    ],
     body: `<div class="note"><b>Confirmed contract:</b> real name is <code>policyStatusChangeEvent</code>, <code>POST insurance/v1/customerJourneyStatus</code>, payload <code>{userId, policyBought: true/false}</code>. The contract doc says auth is "same as other APIs (<b>with Mule</b>)" — worth confirming whether Mule fronts this call instead of/alongside Kong. See §15 Reconciliation.</div>`,
     sketch:
 `PB --POST /journey-status(userId, policyBought=true)--> Kong --> Insurance Service
@@ -416,6 +509,16 @@ Insurance Service: saves policyBought=true against UCIC in its own DB`,
     code: "F5",
     title: "Flow 5 — Redirect Back to App",
     blurb: "PB hands control back to the native OptimusApp screen once the WebView journey ends.",
+    learn: [
+      "Why \"who owns resume state\" is the single most important decision in this flow",
+      "The difference between Optimus ending the session and PB ending the journey",
+      "What \"resume\" actually requires PB to remember on its own side"
+    ],
+    questions: [
+      "If PB owns \"resuming where the user left off,\" what exactly does PB need to have stored to make that true — and is there anything in this integration that confirms PB actually does?",
+      "What would a user see if they abandoned the journey, came back two days later, and PB's own session had already expired on its side?",
+      "Whose job is it to test this exact scenario before go-live — IDFC's QA team, PB's QA team, or both together?"
+    ],
     body: `<div class="note"><b>Resume-journey rule:</b> if the user abandons the journey midway and comes back to the Insurance page later, Optimus simply re-opens the WebView pointing at PB — PB owns resuming state, not Optimus.</div>`,
     sketch: `PB --redirect back to app--> OptimusApp`,
     mermaid:
@@ -432,6 +535,18 @@ Insurance Service: saves policyBought=true against UCIC in its own DB`,
     code: "F6",
     title: "Flow 6 — Fetch Current Policies (microservice-level)",
     blurb: "The detailed, service-level view of how Optimus serves the 'My Policies' screen, including the DB short-circuit.",
+    learn: [
+      "Why Optimus checks its own database before ever calling PB",
+      "The cost of an unnecessary external API call at scale, multiplied across millions of users",
+      "How a single boolean (policyBought) becomes a performance optimization",
+      "What \"Empty Response\" actually communicates to the app layer"
+    ],
+    questions: [
+      "If this flag is ever wrong — set to false for someone who did buy, or true for someone who didn't — which direction of error is worse for the business, and why?",
+      "At IDFC's scale, what's the real cost (latency, PB API quota, money) of removing this DB short-circuit and always calling PB?",
+      "\"Empty Response\" vs. an explicit \"no policies found\" message — does the current design tell the difference between \"you have no policies\" and \"we didn't even check\"?",
+      "Why does this exact same caching idea show up again in Flow 7 at a completely different level of the stack? What does that repetition tell you about the design philosophy?"
+    ],
     body: `<p>Optimus avoids calling PB at all unless its own DB confirms a policy was actually bought — saving an unnecessary external call for users who never completed a purchase.</p>
       <div class="note"><b>Confirmed contract (PB-side):</b> PB's real API is <code>getPolicies</code>, returning a <code>healthPolicies</code> array. The written contract documents <b>two competing request shapes</b> for this call (GET with a path param vs. POST with an encrypted body) — needs to be narrowed to one. See §14 / §15.</div>`,
     sketch:
@@ -469,6 +584,18 @@ Insurance Service: saves policyBought=true against UCIC in its own DB`,
     code: "F7",
     title: "Flow 7 — Policy Persistence Pattern (high-level)",
     blurb: "The macro / product-level view of the same caching idea as Flow 6, at the Optimus ⇄ PB ⇄ Optimus-DB level.",
+    learn: [
+      "How the same caching idea looks different depending on which layer you're standing in",
+      "Why \"first time\" and \"subsequent logins\" need genuinely different logic, not just a simple if-check",
+      "What it means for a flag to never get unset once it's true",
+      "The lifecycle of a single boolean from \"doesn't exist\" to \"true forever\""
+    ],
+    questions: [
+      "userHasPoliciesWithPB only ever gets set to true in this design — is there a flow anywhere that would ever set it back to false? Should there be one (e.g., a cancelled or refunded policy)?",
+      "If a user buys a policy through PB, then later buys a second one, does Optimus need to call PB again to learn about the second one, or does the flag alone already cover that?",
+      "Compare this exact persistence logic to Flow 6's policyBought check — are these genuinely the same flag under two names, or could they drift apart over time if two different teams maintain them?",
+      "What's the very first login experience for a brand-new user who's never touched insurance — does the \"Subsequent Logins\" branch even fire for them, or does it short-circuit before the flag is ever checked?"
+    ],
     body: `<div class="note"><code>policyBought</code> (Flow 6) and <code>userHasPoliciesWithPB</code> (this flow) are the <b>same conceptual flag</b> — one is the backend field name, the other the product/sequence-diagram name.</div>`,
     sketch:
 `FIRST-TIME PURCHASE
@@ -489,7 +616,7 @@ Optimus --display dashboard--> User`,
     participant PB as PB
     participant DB as Optimus DB
 
-    rect rgb(17,37,64)
+    rect rgb(234,241,250)
     Note over U,DB: First Time / Policy Purchase Flow
     PB-->>U: Redirect to Optimus (policyBuySuccessful=true)
     U->>O: Request with policyBuySuccessful flag
@@ -499,7 +626,7 @@ Optimus --display dashboard--> User`,
     O-->>U: Display policies / dashboard
     end
 
-    rect rgb(17,37,64)
+    rect rgb(234,241,250)
     Note over U,DB: Subsequent Logins
     U->>O: Login Request
     O->>DB: Check userHasPoliciesWithPB flag
@@ -520,6 +647,18 @@ Optimus --display dashboard--> User`,
     code: "F8",
     title: "Flow 8 — CleverTap Event Pipeline",
     blurb: "PB emits behavioral events into IDFC's CleverTap instance — relayed entirely through IDFC's own middleware/event-bus stack.",
+    learn: [
+      "Why analytics events take a completely different path (Mule→Kafka) than every other call in this integration",
+      "What problem an event bus like Kafka solves that a direct API call doesn't",
+      "How the same STS-token gets reused for an entirely different purpose — identity resolution, not session validation",
+      "Why a \"TBD\" contract on a finalized design is a real engineering risk, not just a formality"
+    ],
+    questions: [
+      "Every other PB→IDFC call in this integration goes through Kong. Why does this one go through Mule and Kafka instead — what's fundamentally different about an analytics event vs. a user-info request?",
+      "If Kafka is down for 10 minutes, what happens to the CleverTap events PB tried to send during that window — are they lost, retried, or queued somewhere?",
+      "The STS-token is decoded here purely to attach a user id to a marketing event. Is that an appropriate use of a session-security token, or is it mixing two concerns that should stay separate?",
+      "The flow design is \"finalized\" but the wire contract is \"TBD\" — what's the actual risk of building Kafka consumers and dashboards against a contract that could still change?"
+    ],
     body: `
       <p>This is the detailed design behind the item previously listed as <b>"Future scope — CleverTap integration (not in MVP)."</b> Design is finalized; rollout is still pending MVP go-live.</p>
       <ul>
@@ -557,6 +696,16 @@ Insurance Service --raise event--> Event Tracker Service --> CleverTap`,
     code: "05",
     title: "Session Management",
     blurb: "How the STS-token is minted, propagated, validated, and kept alive across every cross-system call.",
+    learn: [
+      "The complete lifecycle of a single STS-token, end to end, across every flow in this document",
+      "Why \"session active\" and \"token valid\" are two different things that have to be checked together",
+      "What changes the moment a second token (EntAuth) enters the picture"
+    ],
+    questions: [
+      "Trace one STS-token from the moment it's minted in Flow 1 to the last flow it's used in — how many different services touch it, and does any one of them know its full lifecycle?",
+      "If EA/STS Service itself goes down, which flows in this entire document stop working immediately, and which ones keep working a little longer on a cached \"valid\" result?",
+      "Now that we know getUserDetailsForPolicyBazaar needs a second EntAuth token, does every other PB→IDFC call need one too, or is this API a special case — and if it's special, why?"
+    ],
     body: ``,
     sketch: null,
     mermaid: null,
@@ -578,6 +727,16 @@ Insurance Service --raise event--> Event Tracker Service --> CleverTap`,
     code: "06",
     title: "Security Management",
     blurb: "Gateway-level authorization and end-to-end encryption — PB never has a direct path into internal services.",
+    learn: [
+      "The three layers of protection stacked on top of every PB↔IDFC call: gateway auth, transport encryption, and network topology",
+      "Why \"no direct path into internal services\" is a design principle, not an accident",
+      "The real difference between a hardcoded bearer token (QA-grade) and a production-grade auth scheme"
+    ],
+    questions: [
+      "If Kong's Ent Auth token were somehow leaked, what's the actual blast radius — every PB↔IDFC API, or only some of them?",
+      "PB's own APIs currently use a hardcoded bearer token. What's the worst realistic outcome if that exact token shipped to production unchanged?",
+      "\"Encrypted end-to-end\" between PB and Kong protects data in transit — what does it not protect against?"
+    ],
     body: `
       <ul>
         <li><b>Kong Gateway Protection:</b> all Kong-exposed APIs are protected by an <b>Enterprise Authorization (Ent Auth) token</b> — confirmed as the same <code>EntAuth token</code> referenced in the <code>getUserDetailsForPolicyBazaar</code> contract.</li>
@@ -594,6 +753,16 @@ Insurance Service --raise event--> Event Tracker Service --> CleverTap`,
     code: "07",
     title: "Component Glossary",
     blurb: "Every actor across all 8 flows, and the role it plays.",
+    learn: [
+      "A clean mental map of all the actors in this integration and the one job each one does",
+      "Which components are IDFC's, which are PB's, and which sit in between",
+      "Why some components (Mule, Kong) sound similar but solve different problems"
+    ],
+    questions: [
+      "Without looking back at the diagrams, can you name which three components a single getUserDetailsForPolicyBazaar call physically passes through?",
+      "Kong and Mule both sit \"in front of\" backend services. If you had to explain the difference to a new team member in one sentence each, what would you say?",
+      "Which single component, if it went down for an hour, would break the most flows in this entire document?"
+    ],
     body: ``,
     sketch: null,
     mermaid: null,
@@ -622,6 +791,15 @@ Insurance Service --raise event--> Event Tracker Service --> CleverTap`,
     code: "08",
     title: "API Reference (summary)",
     blurb: "Every endpoint seen across the diagrams — now matched to its confirmed real name where one exists.",
+    learn: [
+      "The six real, named APIs that make this entire integration work",
+      "Which direction each call travels — who's the caller, who's the callee",
+      "Why two of these six still aren't fully specified yet"
+    ],
+    questions: [
+      "Of these six APIs, which ones are PB calling IDFC, and which are IDFC calling PB — does the split surprise you given how \"white-labeled\" this product is supposed to be?",
+      "If you could only fully test two of these six APIs before go-live, which two would you pick, and why?"
+    ],
     body: `<p>Full URLs, payloads, and error codes are in <a href="#sec-contracts" onclick="jumpTo(event,'sec-contracts')">§14 API Contracts — Detailed Payloads</a>.</p>`,
     sketch: null,
     mermaid: null,
@@ -642,6 +820,16 @@ Insurance Service --raise event--> Event Tracker Service --> CleverTap`,
     code: "14",
     title: "API Contracts — Detailed Payloads",
     blurb: "Exact URLs, request/response JSON, and error codes — sourced from Shreyas Mahajan's API-contracts note.",
+    learn: [
+      "The exact shape of every request and response — not just the concept, the actual JSON",
+      "Where PII (PAN, CKYC, address, account number) physically sits in the payload",
+      "The precise error codes each API can return, and what each one should trigger downstream"
+    ],
+    questions: [
+      "Look at the getUserDetailsForPolicyBazaar response — how many distinct categories of PII does a single API call expose in one shot, and does PB need all of them to sell a policy?",
+      "The account.isPrimary flag is noted as \"may come back false for retail accounts\" — what's the downstream impact if PB assumes that field is always reliable?",
+      "If this contract changes after PB's QA review, what's the blast radius across the rest of this document — how many other sections reference these exact field names?"
+    ],
     body: `
       <p><b>14.1 APIs exposed by IDFC</b></p>
 
@@ -736,41 +924,21 @@ Response:
     table: null
   },
   {
-    id: "sec-reconciliation",
+    id: "sec-synthesis",
     code: "15",
-    title: "Reconciliation Needed (diagram vs. written contract)",
-    blurb: "Points where the whiteboard sequence diagrams and the written API-contracts note don't line up exactly — flagged rather than silently resolved.",
-    body: ``,
-    sketch: null,
-    mermaid: null,
-    table: {
-      headers: ["#", "Diagram says", "Written contract says", "Confirm"],
-      rows: [
-        ["1", "<code>getRedirectionURL</code> is a <b>GET</b>", "It's a <b>POST</b> with a <code>{Token}</code> body", "Which verb is final"],
-        ["2", "<code>GET /user-info</code> with just Bearer STS-token", "Needs STS token <b>+</b> a separately-minted EntAuth token", "Update auth assumption everywhere this repeats"],
-        ["3", "<code>/journey-status</code> routed via <b>Kong</b>", "Auth is \"same as other APIs (<b>with Mule</b>)\"", "Whether Mule fronts this call instead of/alongside Kong"],
-        ["4", "—", "<code>getPolicies</code> has two different request shapes documented", "Pick one final contract"],
-        ["5", "Flow 8 design is finalized", "<code>publishClevertapEvent</code> wire contract marked <b>TBD</b>", "Design ≠ contract yet — contract still needed"],
-        ["6", "—", "Base URLs for <code>insurance/v1/*</code> depend on \"Mule confirmation\"", "Get final base URL once Mule team confirms"],
-        ["7", "—", "PB's redirection domain is temporary/QA", "Get production domain, then whitelist + ISG approval"],
-        ["8", "—", "PB's own APIs use a hardcoded bearer token", "Confirm QA-only, production scheme to follow"]
-      ]
-    }
-  },
-  {
-    id: "sec-future",
-    code: "16",
-    title: "Future Scope & Open Items",
-    blurb: "What's designed but not yet live, and what's still pending confirmation.",
+    title: "🧩 Thoughtful Questions — Test Your Whole-System Understanding",
+    blurb: "No single flow above answers these on its own — that's the point. These only click once you can hold the whole system in your head at once.",
     body: `
-      <ul>
-        <li><b>CleverTap integration</b> — design finalized (Flow 8), but the <code>publishClevertapEvent</code> wire contract is still <b>TBD</b>. Not yet part of MVP rollout.</li>
-        <li><b>PB redirection domain</b> — currently QA/temporary; pending PB sharing the production domain, then IDFC whitelisting + ISG temporary approval.</li>
-        <li><b>Base URL confirmation</b> — <code>insurance/v1/*</code> APIs are pending final base URL from the Mule team.</li>
-        <li><b>Kong vs. Mule routing</b> — confirm which gateway layer fronts <code>getUserDetailsForPolicyBazaar</code> and <code>policyStatusChangeEvent</code>.</li>
-        <li><b><code>getPolicies</code> contract</b> — two competing request shapes documented; needs to be narrowed to one.</li>
-        <li><b>Production-grade auth for PB's own APIs</b> — <code>getRedirectionURL</code> / <code>getPolicies</code> currently use a hardcoded bearer token; confirm this isn't carried into production.</li>
-      </ul>`,
+      <p>Use this as a self-check once you've gone through Flows 1–8 and the cross-cutting sections. Try answering from memory before re-opening anything above.</p>
+      <ol>
+        <li>If PB's EA/STS validation service went down for exactly 5 minutes during peak hours, trace which of the 8 flows would fail outright, which would degrade gracefully, and which wouldn't even notice. Why the difference?</li>
+        <li>Flow 6 and Flow 7 both implement the same "don't call PB unless you have to" caching idea, at two different levels of the stack. If you had to enforce this rule in only one place, which layer would you pick, and what would you lose by removing it from the other?</li>
+        <li>The STS-token shows up minted in Flow 1, validated in Flow 2, kept alive in Flow 3, and decoded for identity in Flow 8. If you redesigned this around a single token doing all four jobs, what's the strongest argument against that simplification?</li>
+        <li>Security Management says PB traffic is forced through "Kong (or Mule, for the async event path)." Walk through Flows 2, 4, and 8 specifically — which gateway does each one actually claim to use, and does that consistently match the "forced through Kong" security story?</li>
+        <li>Flow 7's persistence pattern assumes a policy, once bought, stays bought. What real-world event would make <code>userHasPoliciesWithPB = true</code> go stale — and where in this architecture would that staleness actually get caught, if anywhere?</li>
+        <li>If you had to onboard a brand-new insurance partner tomorrow using this exact architecture as a template, which components would you have to fully duplicate, and which ones could you reuse as-is?</li>
+        <li>Across all 8 flows, count how many steps show the user something on screen versus how many happen silently in the background. What does that ratio tell you about where the real UX risk in this journey actually lives?</li>
+      </ol>`,
     sketch: null,
     mermaid: null,
     table: null
@@ -822,9 +990,13 @@ const MINDMAP = {
       children: [
         { label: "Component Glossary", target: "sec-glossary" },
         { label: "API Reference (summary)", target: "sec-api" },
-        { label: "API Contracts — Detailed Payloads", target: "sec-contracts" },
-        { label: "Reconciliation Needed", target: "sec-reconciliation" },
-        { label: "Future Scope & Open Items", target: "sec-future" }
+        { label: "API Contracts — Detailed Payloads", target: "sec-contracts" }
+      ]
+    },
+    {
+      label: "Reflection",
+      children: [
+        { label: "🧩 Thoughtful Questions — Whole-System Test", target: "sec-synthesis" }
       ]
     }
   ]
@@ -858,16 +1030,24 @@ function renderSections(){
       ? `<div class="sketch-block"><div class="diagram-label">Rough Sketch</div><pre class="sketch">${escapeHtml(s.sketch)}</pre></div>`
       : "";
     const tableHtml = s.table ? buildTable(s.table) : "";
+    const learnHtml = (s.learn && s.learn.length)
+      ? `<details class="learn-box"><summary>🎯 What You'll Learn <span class="lcount">(click to reveal — ${s.learn.length})</span></summary><ul>${s.learn.map(x => `<li>${x}</li>`).join("")}</ul></details>`
+      : "";
+    const questionsHtml = (s.questions && s.questions.length)
+      ? `<details class="qbox"><summary>🤔 Thoughtful Questions <span class="qcount">(click to reveal — ${s.questions.length})</span></summary><ol>${s.questions.map(x => `<li>${x}</li>`).join("")}</ol></details>`
+      : "";
 
     root.insertAdjacentHTML("beforeend", `
       <details class="card" id="${s.id}">
         <summary><span class="code-chip">${s.code}</span><span>${s.title}</span></summary>
         <div class="card-body">
           <div class="blurb">${s.blurb}</div>
+          ${learnHtml}
           ${s.body || ""}
           ${mermaidHtml}
           ${sketchHtml}
           ${tableHtml}
+          ${questionsHtml}
         </div>
       </details>
     `);
@@ -941,30 +1121,30 @@ if (typeof mermaid !== "undefined"){
       startOnLoad:false,
       theme:"base",
       themeVariables:{
-        background:"#081827",
-        primaryColor:"#123250",
-        primaryTextColor:"#DCE8F2",
-        primaryBorderColor:"#5CC8FF",
-        lineColor:"#5CC8FF",
-        secondaryColor:"#123250",
-        tertiaryColor:"#0A1A2C",
-        actorBkg:"#123250",
-        actorBorder:"#5CC8FF",
-        actorTextColor:"#DCE8F2",
-        actorLineColor:"#3A87AD",
-        signalColor:"#9FD8FF",
-        signalTextColor:"#DCE8F2",
-        labelBoxBkgColor:"#123250",
-        labelBoxBorderColor:"#5CC8FF",
-        labelTextColor:"#DCE8F2",
-        loopTextColor:"#F2B441",
-        noteBkgColor:"#1C3C5E",
-        noteTextColor:"#DCE8F2",
-        noteBorderColor:"#F2B441",
-        activationBorderColor:"#5CC8FF",
-        activationBkgColor:"#123250",
-        sequenceNumberColor:"#0A1A2C",
-        altBackground:"#0D233A",
+        background:"#F0F4FA",
+        primaryColor:"#EEF2F9",
+        primaryTextColor:"#16263B",
+        primaryBorderColor:"#1B6FB8",
+        lineColor:"#1B6FB8",
+        secondaryColor:"#EEF2F9",
+        tertiaryColor:"#FFFFFF",
+        actorBkg:"#EEF2F9",
+        actorBorder:"#1B6FB8",
+        actorTextColor:"#16263B",
+        actorLineColor:"#7FA8CC",
+        signalColor:"#1B6FB8",
+        signalTextColor:"#16263B",
+        labelBoxBkgColor:"#EEF2F9",
+        labelBoxBorderColor:"#1B6FB8",
+        labelTextColor:"#16263B",
+        loopTextColor:"#946408",
+        noteBkgColor:"#FBF1DC",
+        noteTextColor:"#16263B",
+        noteBorderColor:"#946408",
+        activationBorderColor:"#1B6FB8",
+        activationBkgColor:"#EEF2F9",
+        sequenceNumberColor:"#FFFFFF",
+        altBackground:"#F6F8FC",
         fontFamily:"IBM Plex Mono, monospace"
       },
       flowchart:{ curve:"linear" },
