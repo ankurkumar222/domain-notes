@@ -507,7 +507,7 @@
     <div class="topbar-row">
       <div class="brand">
         <h1>Demat API <span>· Memory Map</span></h1>
-        <small>IDFC Wealth &amp; Demat Platform — MOFSL · NSDL · Zerodha · ISEC · PIS</small>
+        <small>BIMBO Bank Wealth &amp; Demat Platform — MOFSL · NSDL · Zerodha · ISEC · PIS</small>
       </div>
       <div class="search-wrap">
         <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="#8B96A8" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -573,11 +573,11 @@ const DATA = {
   name: "Demat API Universe",
   id: "root",
   kind: "root",
-  desc: "Everything IDFC's Demat platform talks to — depositories, brokers, account info, holdings, NRI trading, service requests, reports, and the internal plumbing holding it together.",
+  desc: "Everything BIMBO Bank's Demat platform talks to — depositories, brokers, account info, holdings, NRI trading, service requests, reports, and the internal plumbing holding it together.",
   children: [
 
     { name:"MOFSL", id:"mofsl", kind:"category", color:"var(--c-mofsl)", mono:"MO",
-      desc:"Broker integration. Bundles Trading + Demat + a linked Bank account into one onboarding journey — IDFC checks status, then hands the customer to MOFSL's portal to finish everything else.",
+      desc:"Broker integration. Bundles Trading + Demat + a linked Bank account into one onboarding journey — BIMBO Bank checks status, then hands the customer to MOFSL's portal to finish everything else.",
       children:[
         { name:"Get Status", id:"mofsl-status", kind:"endpoint", badge:"GET", path:"/api/demat/v1/mofsl/status", color:"var(--c-mofsl)",
           desc:"Checks whether the customer already has a MOFSL Trading and/or Demat account, before starting a fresh one.",
@@ -599,7 +599,7 @@ const DATA = {
             "Controller validates the account number.",
             "Service requests a short-lived JWT token from MOFSL.",
             "Calls the MOFSL Redirect API via ESB Mule, sending the account number.",
-            "Returns the redirectUrl — customer leaves the IDFC app here.",
+            "Returns the redirectUrl — customer leaves the BIMBO Bank app here.",
             "No callback: MOFSL owns the entire rest of the journey end-to-end."
           ]
         },
@@ -617,7 +617,7 @@ const DATA = {
     },
 
     { name:"NSDL", id:"nsdl", kind:"category", color:"var(--c-nsdl)", mono:"NS",
-      desc:"The depository — the only entity legally allowed to hold electronic share records in India. IDFC validates the customer heavily up front, then NSDL runs its own KYC checks and calls back with the result.",
+      desc:"The depository — the only entity legally allowed to hold electronic share records in India. BIMBO Bank validates the customer heavily up front, then NSDL runs its own KYC checks and calls back with the result.",
       children:[
         { name:"Create Order (V1)", id:"nsdl-create-v1", kind:"endpoint", badge:"POST", path:"/api/demat/v1/order/create", color:"var(--c-nsdl)",
           desc:"Original order-creation call. No consent flag. Superseded by V2 — kept here for reference only.",
@@ -632,12 +632,12 @@ const DATA = {
             "Validate the bank account is real and owned by the customer.",
             "Assemble the payload (name, PAN, email, mobile) and digitally sign it.",
             "Call NSDL — it opens a temporary order and returns a Transaction ID.",
-            "IDFC saves the Transaction ID against the customer record.",
+            "BIMBO Bank saves the Transaction ID against the customer record.",
             "Customer is redirected to NSDL's own portal to finish KYC + nominee details."
           ]
         },
         { name:"NSDL-side processing", id:"nsdl-phase2", kind:"info", badge:"i", color:"var(--c-nsdl)",
-          desc:"Not an IDFC API at all — this phase happens entirely on NSDL's own site, outside IDFC's systems.",
+          desc:"Not an BIMBO Bank API at all — this phase happens entirely on NSDL's own site, outside BIMBO Bank's systems.",
           flow:[
             "Customer fills remaining KYC + nominee fields directly on NSDL's portal.",
             "NSDL cross-checks PAN against income tax records.",
@@ -646,16 +646,16 @@ const DATA = {
           ]
         },
         { name:"Success Redirect", id:"nsdl-success", kind:"endpoint", badge:"POST", path:"/api/demat/v1/handleSuccessRedirect", color:"var(--c-nsdl)",
-          desc:"Callback NSDL fires when account creation succeeds (NSDL → IDFC, the only integration with an explicit success callback).",
+          desc:"Callback NSDL fires when account creation succeeds (NSDL → BIMBO Bank, the only integration with an explicit success callback).",
           input:"DP ID, Client ID, digital signature",
           output:"Status updated to SUCCESS",
-          flow:["IDFC validates the signature — confirms it genuinely came from NSDL, untampered.","DP ID + Client ID saved to the customer record.","Account is now live for trading."]
+          flow:["BIMBO Bank validates the signature — confirms it genuinely came from NSDL, untampered.","DP ID + Client ID saved to the customer record.","Account is now live for trading."]
         },
         { name:"Failure Redirect", id:"nsdl-failure", kind:"endpoint", badge:"POST", path:"/api/demat/v1/handleFailureRedirect", color:"var(--c-nsdl)",
           desc:"Callback NSDL fires when account creation fails.",
           input:"Failure reason, digital signature",
           output:"Status updated to FAILED",
-          flow:["IDFC validates the signature.","Failure reason saved to the record.","Customer notified to correct the issue and retry."]
+          flow:["BIMBO Bank validates the signature.","Failure reason saved to the record.","Customer notified to correct the issue and retry."]
         },
         { name:"Check Client ID", id:"nsdl-checkid", kind:"endpoint", badge:"INT", path:"internal · via ESB Mule client", color:"var(--c-nsdl)",
           desc:"Internal-only pre-check, not customer-facing. Asks NSDL: does this customer already have a Client ID / DP ID?",
@@ -763,10 +763,10 @@ const DATA = {
     { name:"Glossary — Key Concepts", id:"gloss", kind:"category", color:"var(--c-gloss)", mono:"§",
       desc:"The vocabulary that shows up across every integration above — worth knowing cold.",
       children:[
-        { name:"DP ID", id:"g-dpid", kind:"concept", badge:"§", color:"var(--c-gloss)", desc:"Depository Participant ID — identifies which bank or broker (e.g. IDFC) the demat account sits under." },
+        { name:"DP ID", id:"g-dpid", kind:"concept", badge:"§", color:"var(--c-gloss)", desc:"Depository Participant ID — identifies which bank or broker (e.g. BIMBO Bank) the demat account sits under." },
         { name:"Client ID", id:"g-clientid", kind:"concept", badge:"§", color:"var(--c-gloss)", desc:"The customer's unique ID within that DP. DP ID + Client ID together uniquely identify one demat account." },
         { name:"Transaction ID", id:"g-txid", kind:"concept", badge:"§", color:"var(--c-gloss)", desc:"A temporary reference NSDL hands back the moment an order is created — used later to match the eventual success/failure callback to the right customer." },
-        { name:"JWT Token", id:"g-jwt", kind:"concept", badge:"§", color:"var(--c-gloss)", desc:"A short-lived security token IDFC uses to talk to MOFSL's systems." },
+        { name:"JWT Token", id:"g-jwt", kind:"concept", badge:"§", color:"var(--c-gloss)", desc:"A short-lived security token BIMBO Bank uses to talk to MOFSL's systems." },
         { name:"Digital Signature", id:"g-sig", kind:"concept", badge:"§", color:"var(--c-gloss)", desc:"Cryptographic proof that a payload or callback genuinely came from the claimed sender, and wasn't altered in transit." },
         { name:"Consent", id:"g-consent", kind:"concept", badge:"§", color:"var(--c-gloss)", desc:"The customer's explicit agreement to open the account / share KYC data — a mandatory gate before any NSDL or MOFSL call goes out." },
         { name:"Winsoft", id:"g-winsoft", kind:"concept", badge:"§", color:"var(--c-gloss)", desc:"External system where MOFSL stores Demat account details — checked whenever a status comes back as EXISTS." },

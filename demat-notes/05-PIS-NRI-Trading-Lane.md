@@ -29,7 +29,7 @@ It's **not** for regular resident Indian investors — it's an NRI-specific comp
 
 - NRIs are legally allowed to invest in Indian listed shares, but RBI wants visibility into the flow of foreign-linked capital.
 - A dedicated PIS bank account becomes the single funnel through which all NRI equity trades pass.
-- The bank (IDFC, in this case) acts as the compliance checkpoint — verifying, reporting, and reconciling these trades under FEMA.
+- The bank (BIMBO Bank, in this case) acts as the compliance checkpoint — verifying, reporting, and reconciling these trades under FEMA.
 
 ---
 

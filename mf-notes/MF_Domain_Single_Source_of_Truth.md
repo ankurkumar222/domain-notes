@@ -213,7 +213,7 @@ Optimus aggregates this, groups folios under their respective portfolios, and ca
 
 ### Investment Account vs Folio — the exact distinction
 
-**Investment Account (Portfolio Code):** a high-level relationship with the RTA (Registrar & Transfer Agent — CAMS/KFintech). Created when a customer first registers with the RTA. On the bank side, the Portfolio Code is the main identifier for MF investments — it acts like a bridge between IDFC and the RTA world.
+**Investment Account (Portfolio Code):** a high-level relationship with the RTA (Registrar & Transfer Agent — CAMS/KFintech). Created when a customer first registers with the RTA. On the bank side, the Portfolio Code is the main identifier for MF investments — it acts like a bridge between BIMBO Bank and the RTA world.
 
 **Folio:** a specific holding account for a single mutual fund scheme — the customer's unique number inside one mutual fund house/RTA (e.g. an HDFC MF folio number, an SBI MF folio number). One customer with one Investment Account can have multiple folios.
 
@@ -308,7 +308,7 @@ Before publishing an order to Kafka, Optimus runs through, in order:
 
 | Step | Check | Detail |
 |---|---|---|
-| 1 | Authentication & Customer Validation | Is the authenticated user a valid IDFC customer? |
+| 1 | Authentication & Customer Validation | Is the authenticated user a valid BIMBO Bank customer? |
 | 2 | Account Ownership | Does the provided savings account and portfolio code (IA) belong to this customer? |
 | 3 | Master Data Check | Validate fund details — RTA code, fund ID, type — against internal cached master data. |
 | 4 | KYC / FATCA Status | Checked via a dedicated KYC Status API, and cross-verified from the PSP Folio for UCIC WinSoft API. |

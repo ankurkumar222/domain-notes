@@ -56,6 +56,6 @@ Deactivate when required (zerodhaDeactivate)
 | | MOFSL | NSDL | Zerodha | ISEC |
 |---|---|---|---|---|
 | Type | Broker (3-in-1) | Depository | Broker | Broker |
-| Callback to IDFC? | No | Yes (success/failure) | Not documented | Not documented |
+| Callback to BIMBO Bank? | No | Yes (success/failure) | Not documented | Not documented |
 | Security | JWT | Digital signature | Not documented | Not documented |
 | Endpoints documented | 3 | 6 | 6 | 0 of ~44 |

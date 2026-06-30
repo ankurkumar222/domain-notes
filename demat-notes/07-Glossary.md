@@ -10,15 +10,15 @@ The vocabulary that shows up across every integration in this note set — worth
 
 | Term | Plain-language definition |
 |---|---|
-| **DP ID** | Depository Participant ID — identifies *which bank/broker* (IDFC, in this case) the demat account sits under. |
+| **DP ID** | Depository Participant ID — identifies *which bank/broker* (BIMBO Bank, in this case) the demat account sits under. |
 | **Client ID** | The customer's unique ID *within* that DP. Together, **DP ID + Client ID** uniquely identify one demat account. |
-| **Transaction ID** | A temporary reference NSDL gives IDFC the moment an order is created — used to match the later success/failure callback to the right customer. |
+| **Transaction ID** | A temporary reference NSDL gives BIMBO Bank the moment an order is created — used to match the later success/failure callback to the right customer. |
 
 ## Security & trust terms
 
 | Term | Plain-language definition |
 |---|---|
-| **JWT Token** | A short-lived security token IDFC uses to securely talk to MOFSL's systems. |
+| **JWT Token** | A short-lived security token BIMBO Bank uses to securely talk to MOFSL's systems. |
 | **Digital Signature** | Cryptographic proof that a payload or callback genuinely came from the claimed sender and wasn't altered in transit. |
 | **Consent** | The customer's explicit agreement to open the account / share KYC data — a mandatory gate before any NSDL or MOFSL call goes out. |
 

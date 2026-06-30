@@ -31,7 +31,7 @@ These notes were built from three source documents (MOFSL flow, Demat API overvi
 |---|---|---|
 | **Type** | Depository (holds shares) | Broker (Trading + Demat) |
 | **Account type** | Demat account only | 3-in-1 (Trading + Demat + Bank) |
-| **Who validates the customer first** | IDFC, heavily, before NSDL is even called | MOFSL — IDFC just redirects |
+| **Who validates the customer first** | BIMBO Bank, heavily, before NSDL is even called | MOFSL — BIMBO Bank just redirects |
 | **Callback** | Yes — explicit success/failure callbacks | None — MOFSL owns the journey end-to-end |
 | **Security mechanism** | Digital signature | JWT token |
 

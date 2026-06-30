@@ -101,9 +101,9 @@ footer{margin-top:24px;font-size:12px;color:var(--text-muted);text-align:center}
         <div class="scene-backdrop" id="backdrop"></div>
         <div class="track" id="track1" style="left:70px;top:113px;width:500px;height:3px;background:var(--border-accent)"></div>
         <div class="track" id="track2" style="left:318px;top:115px;width:3px;height:150px;background:var(--border-success)"></div>
-        <div class="tower idfc" id="t-idfc"><div class="icon-circle"><i class="ti ti-building-bank" style="color:var(--text-accent)" aria-hidden="true"></i></div><div class="th">IDFC demat app</div></div>
+        <div class="tower idfc" id="t-idfc"><div class="icon-circle"><i class="ti ti-building-bank" style="color:var(--text-accent)" aria-hidden="true"></i></div><div class="th">BIMBO Bank demat app</div></div>
         <div class="tower nsdl" id="t-nsdl"><div class="icon-circle"><i class="ti ti-server-2" style="color:var(--text-pro)" aria-hidden="true"></i></div><div class="th">NSDL</div></div>
-        <div class="tower db" id="t-db"><div class="icon-circle" id="db-icon-circle"><i class="ti ti-database" id="db-icon" aria-hidden="true"></i></div><div class="th">IDFC database</div></div>
+        <div class="tower db" id="t-db"><div class="icon-circle" id="db-icon-circle"><i class="ti ti-database" id="db-icon" aria-hidden="true"></i></div><div class="th">BIMBO Bank database</div></div>
         <div class="mover" id="mover"><div class="cube cat-request" id="cube">
           <div class="face front"></div><div class="face back"></div>
           <div class="face left"></div><div class="face right"></div>
@@ -114,7 +114,7 @@ footer{margin-top:24px;font-size:12px;color:var(--text-muted);text-align:center}
     <div class="caption">
       <div><span class="phase-banner" id="phase-banner">Phase 1 · Create order</span></div>
       <div class="toprow">
-        <span class="pill" id="cat-badge">IDFC</span>
+        <span class="pill" id="cat-badge">BIMBO Bank</span>
         <span class="step-counter" id="step-counter">Step 1 of 12</span>
       </div>
       <p class="step-title" id="step-title">Customer initiates</p>
@@ -138,13 +138,13 @@ footer{margin-top:24px;font-size:12px;color:var(--text-muted);text-align:center}
       </div>
     </div>
   </div>
-  <footer>IDFC Wealth &amp; Demat platform · NSDL API reference</footer>
+  <footer>BIMBO Bank Wealth &amp; Demat platform · NSDL API reference</footer>
 </div>
 <script>
 (function(){
   var POS = { idfc:{left:70,top:115}, nsdl:{left:570,top:115}, db:{left:320,top:265} };
   var CAT = {
-    request:{bg:'var(--bg-accent)',text:'var(--text-accent)',border:'var(--border-accent)',label:'IDFC request'},
+    request:{bg:'var(--bg-accent)',text:'var(--text-accent)',border:'var(--border-accent)',label:'BIMBO Bank request'},
     nsdl:{bg:'var(--bg-pro)',text:'var(--text-pro)',border:'var(--border-pro)',label:'NSDL'},
     success:{bg:'var(--bg-success)',text:'var(--text-success)',border:'var(--border-success)',label:'Success'},
     failure:{bg:'var(--bg-danger)',text:'var(--text-danger)',border:'var(--border-danger)',label:'Failure'}
@@ -169,23 +169,23 @@ footer{margin-top:24px;font-size:12px;color:var(--text-muted);text-align:center}
       {phaseIdx:1, title:'Order sent to NSDL', desc:'The signed request travels across to NSDL\u2019s servers.', pos:'nsdl', cat:'request',
        bullets:['Signed payload sent through the middleware / ESB layer','Customer and bank account details now in NSDL\u2019s hands'],
        goal:'Hand the verified request over to NSDL and start the cross-company workflow.',
-       question:'What if this call times out after NSDL creates the order but before IDFC gets the transaction ID back \u2014 is there any way to recover that orphaned order?'},
+       question:'What if this call times out after NSDL creates the order but before BIMBO Bank gets the transaction ID back \u2014 is there any way to recover that orphaned order?'},
       {phaseIdx:1, title:'NSDL opens a temporary order', desc:'NSDL accepts the request and opens a temporary order.', pos:'nsdl', cat:'nsdl',
        bullets:['Temporary order record created on NSDL\u2019s side','Transaction ID generated as the order reference'],
-       goal:'Give IDFC a tracking reference before any real account-creation work begins.',
+       goal:'Give BIMBO Bank a tracking reference before any real account-creation work begins.',
        question:'What if the customer never returns to finish the NSDL form \u2014 how long does this temporary order stay open, and who is responsible for cleaning it up?'},
-      {phaseIdx:1, title:'Transaction ID returned', desc:'NSDL\u2019s response carries the transaction ID back to IDFC.', pos:'idfc', cat:'request',
-       bullets:['Transaction ID returned in the API response','IDFC stores it against the customer record for tracking'],
-       goal:'Let IDFC track this exact request all the way through to its eventual outcome.',
+      {phaseIdx:1, title:'Transaction ID returned', desc:'NSDL\u2019s response carries the transaction ID back to BIMBO Bank.', pos:'idfc', cat:'request',
+       bullets:['Transaction ID returned in the API response','BIMBO Bank stores it against the customer record for tracking'],
+       goal:'Let BIMBO Bank track this exact request all the way through to its eventual outcome.',
        question:'What if two requests for the same customer go out close together \u2014 could two valid transaction IDs exist at once, and what happens when both try to save?'},
-      {phaseIdx:1, title:'Redirect link generated', desc:'IDFC builds the link that hands the customer to NSDL.', pos:'idfc', cat:'request',
+      {phaseIdx:1, title:'Redirect link generated', desc:'BIMBO Bank builds the link that hands the customer to NSDL.', pos:'idfc', cat:'request',
        bullets:['Unique redirect URL built, carrying the transaction reference','Downstream systems optionally notified via event'],
-       goal:'Smoothly transition the customer from IDFC\u2019s app to NSDL\u2019s own portal.',
+       goal:'Smoothly transition the customer from BIMBO Bank\u2019s app to NSDL\u2019s own portal.',
        question:'What if the customer bookmarks or shares this link and someone else opens it later \u2014 does it expire, and is the account holder re-verified on NSDL\u2019s side?'},
       {phaseIdx:2, title:'Customer completes the form on NSDL', desc:'Customer fills the demat application on NSDL\u2019s own portal.', pos:'nsdl', cat:'nsdl',
-       bullets:['Entirely on NSDL\u2019s site \u2014 no IDFC API involved here','Customer enters remaining KYC and nominee details'],
-       goal:'Collect the regulatory details NSDL needs that IDFC\u2019s systems don\u2019t already hold.',
-       question:'What if the customer enters different nominee or address details here than what IDFC already has on file \u2014 does anything reconcile the two records?'},
+       bullets:['Entirely on NSDL\u2019s site \u2014 no BIMBO Bank API involved here','Customer enters remaining KYC and nominee details'],
+       goal:'Collect the regulatory details NSDL needs that BIMBO Bank\u2019s systems don\u2019t already hold.',
+       question:'What if the customer enters different nominee or address details here than what BIMBO Bank already has on file \u2014 does anything reconcile the two records?'},
       {phaseIdx:2, title:'NSDL verifies PAN and KYC', desc:'NSDL checks the customer\u2019s identity against official records.', pos:'nsdl', cat:'nsdl',
        bullets:['PAN cross-checked against income tax records','KYC details validated against registries'],
        goal:'Independently confirm the customer\u2019s identity against authoritative government sources.',
@@ -193,21 +193,21 @@ footer{margin-top:24px;font-size:12px;color:var(--text-muted);text-align:center}
       {phaseIdx:2, title:'Demat account created', desc:'NSDL provisions the account once verification passes.', pos:'nsdl', cat:'nsdl',
        bullets:['Account provisioned on NSDL\u2019s depository','DP ID and Client ID generated'],
        goal:'Actually create the legally recognized depository account \u2014 the moment it starts to exist.',
-       question:'What if NSDL creates the account successfully but its callback to IDFC never arrives \u2014 does the customer now have a live demat account that IDFC doesn\u2019t even know about?'},
+       question:'What if NSDL creates the account successfully but its callback to BIMBO Bank never arrives \u2014 does the customer now have a live demat account that BIMBO Bank doesn\u2019t even know about?'},
       outcome==='success'
-        ? {phaseIdx:3, title:'Success callback to IDFC', endpoint:'POST /api/demat/v1/handleSuccessRedirect', desc:'NSDL calls back with the new account details.', pos:'idfc', cat:'success',
-           bullets:['DP ID, Client ID and a digital signature sent back','IDFC validates the signature before trusting the payload'],
-           goal:'Tell IDFC, in a way it can verifiably trust, exactly what happened on NSDL\u2019s side.',
+        ? {phaseIdx:3, title:'Success callback to BIMBO Bank', endpoint:'POST /api/demat/v1/handleSuccessRedirect', desc:'NSDL calls back with the new account details.', pos:'idfc', cat:'success',
+           bullets:['DP ID, Client ID and a digital signature sent back','BIMBO Bank validates the signature before trusting the payload'],
+           goal:'Tell BIMBO Bank, in a way it can verifiably trust, exactly what happened on NSDL\u2019s side.',
            question:'What if someone intercepted or replayed this callback \u2014 what specifically stops a forged success message from marking a non-existent account as live?'}
-        : {phaseIdx:3, title:'Failure callback to IDFC', endpoint:'POST /api/demat/v1/handleFailureRedirect', desc:'NSDL calls back to report that creation failed.', pos:'idfc', cat:'failure',
-           bullets:['Failure reason and a digital signature sent back','IDFC validates the signature before processing the error'],
-           goal:'Tell IDFC, in a way it can verifiably trust, exactly what went wrong on NSDL\u2019s side.',
-           question:'What if the failure reason NSDL sends is too generic for the customer to act on \u2014 does IDFC translate it into something fixable, or just relay it as-is?'},
+        : {phaseIdx:3, title:'Failure callback to BIMBO Bank', endpoint:'POST /api/demat/v1/handleFailureRedirect', desc:'NSDL calls back to report that creation failed.', pos:'idfc', cat:'failure',
+           bullets:['Failure reason and a digital signature sent back','BIMBO Bank validates the signature before processing the error'],
+           goal:'Tell BIMBO Bank, in a way it can verifiably trust, exactly what went wrong on NSDL\u2019s side.',
+           question:'What if the failure reason NSDL sends is too generic for the customer to act on \u2014 does BIMBO Bank translate it into something fixable, or just relay it as-is?'},
       outcome==='success'
         ? {phaseIdx:3, title:'Saved to database', desc:'The new demat account is recorded against the customer.', pos:'db', cat:'success',
            bullets:['DP ID and Client ID saved to the customer\u2019s record','Status updated to SUCCESS'],
            goal:'Make the outcome durable and visible to every other system that depends on it.',
-           question:'What if this database write fails right after NSDL\u2019s callback succeeded \u2014 is there a reconciliation job, or does the customer end up with a live NSDL account and a stale IDFC record?'}
+           question:'What if this database write fails right after NSDL\u2019s callback succeeded \u2014 is there a reconciliation job, or does the customer end up with a live NSDL account and a stale BIMBO Bank record?'}
         : {phaseIdx:3, title:'Failure saved to database', desc:'The failure is logged so the customer can retry.', pos:'db', cat:'failure',
            bullets:['Failure reason and error details saved to the record','Status updated to FAILED'],
            goal:'Make the failure durable and visible so the customer can be guided to retry.',

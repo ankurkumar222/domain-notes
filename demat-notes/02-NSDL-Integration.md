@@ -6,9 +6,9 @@
 
 ## Why NSDL exists in this flow
 
-NSDL is the **depository** — the only entity legally allowed to hold electronic share records in India. IDFC can't open a demat account on its own; it can only **collect customer details, validate them, hand off to NSDL, and record whatever NSDL sends back.**
+NSDL is the **depository** — the only entity legally allowed to hold electronic share records in India. BIMBO Bank can't open a demat account on its own; it can only **collect customer details, validate them, hand off to NSDL, and record whatever NSDL sends back.**
 
-This is the key difference from MOFSL: with NSDL, **IDFC owns more of the validation work upfront** and gets explicit success/failure callbacks. With MOFSL, the customer leaves the app and MOFSL handles everything end-to-end with no callback.
+This is the key difference from MOFSL: with NSDL, **BIMBO Bank owns more of the validation work upfront** and gets explicit success/failure callbacks. With MOFSL, the customer leaves the app and MOFSL handles everything end-to-end with no callback.
 
 ---
 
@@ -16,17 +16,17 @@ This is the key difference from MOFSL: with NSDL, **IDFC owns more of the valida
 
 | API | Endpoint | Direction | Purpose |
 |---|---|---|---|
-| Create Order (v1) | `POST /api/demat/v1/order/create` | IDFC → NSDL | Original order creation, no consent flag — **deprecated** |
-| Create Order (v2) | `POST /api/demat/v2/order/create` | IDFC → NSDL | **Active version** — adds consent capture |
-| Success Redirect | `POST /api/demat/v1/handleSuccessRedirect` | NSDL → IDFC | Callback on successful account creation |
-| Failure Redirect | `POST /api/demat/v1/handleFailureRedirect` | NSDL → IDFC | Callback on failed account creation |
-| Check Client ID | Internal, via ESB Mule client | IDFC → NSDL | Pre-check: does this customer already have an NSDL Client ID / DP ID |
+| Create Order (v1) | `POST /api/demat/v1/order/create` | BIMBO Bank → NSDL | Original order creation, no consent flag — **deprecated** |
+| Create Order (v2) | `POST /api/demat/v2/order/create` | BIMBO Bank → NSDL | **Active version** — adds consent capture |
+| Success Redirect | `POST /api/demat/v1/handleSuccessRedirect` | NSDL → BIMBO Bank | Callback on successful account creation |
+| Failure Redirect | `POST /api/demat/v1/handleFailureRedirect` | NSDL → BIMBO Bank | Callback on failed account creation |
+| Check Client ID | Internal, via ESB Mule client | BIMBO Bank → NSDL | Pre-check: does this customer already have an NSDL Client ID / DP ID |
 
 > Only **v2 create-order** is in active use. v1 is legacy and kept here for reference only.
 
 ---
 
-## Phase 1 — Create Order (IDFC-side)
+## Phase 1 — Create Order (BIMBO Bank-side)
 
 **Trigger:** customer taps "open demat account," agrees to consent, enters their linked bank account number.
 
@@ -53,15 +53,15 @@ POST /api/demat/v2/order/create
 
 5. **NSDL response** — NSDL opens a *temporary* order and returns a **Transaction ID** (order reference)
 
-6. **IDFC persists state** — Transaction ID is saved against the customer record, for correlating the eventual callback
+6. **BIMBO Bank persists state** — Transaction ID is saved against the customer record, for correlating the eventual callback
 
-7. **Hand off to NSDL's site** — IDFC builds a redirect URL, optionally fires an event to notify downstream systems that an account creation is in flight. Customer leaves the IDFC app at this point.
+7. **Hand off to NSDL's site** — BIMBO Bank builds a redirect URL, optionally fires an event to notify downstream systems that an account creation is in flight. Customer leaves the BIMBO Bank app at this point.
 
 ---
 
-## Phase 2 — NSDL-side processing (no IDFC API involved)
+## Phase 2 — NSDL-side processing (no BIMBO Bank API involved)
 
-This entire phase happens on **NSDL's own portal**, outside IDFC's systems:
+This entire phase happens on **NSDL's own portal**, outside BIMBO Bank's systems:
 
 - Customer fills in the remaining demat application fields (KYC, nominee details, etc.) directly on NSDL's site
 - NSDL cross-checks PAN against income tax records
@@ -72,17 +72,17 @@ This entire phase happens on **NSDL's own portal**, outside IDFC's systems:
 
 ## Phase 3 — Callback and save
 
-NSDL calls back to IDFC once the customer finishes on its site. Two possible outcomes:
+NSDL calls back to BIMBO Bank once the customer finishes on its site. Two possible outcomes:
 
 ### ✅ Success — `POST /api/demat/v1/handleSuccessRedirect`
 - NSDL sends back: DP ID, Client ID, and a digital signature
-- IDFC validates the signature first (confirms the callback genuinely came from NSDL, untampered)
+- BIMBO Bank validates the signature first (confirms the callback genuinely came from NSDL, untampered)
 - DP ID and Client ID are saved to the customer's record
 - Status updated to `SUCCESS` — account is live for trading
 
 ### ❌ Failure — `POST /api/demat/v1/handleFailureRedirect`
 - NSDL sends back: a failure reason, and a digital signature
-- IDFC validates the signature
+- BIMBO Bank validates the signature
 - Failure reason and error details are saved to the record
 - Status updated to `FAILED` — customer is notified so they can correct the issue and retry
 
@@ -113,9 +113,9 @@ POST /v2/order/create  →  NSDL
         ↓
 NSDL returns Transaction ID (temporary order)
         ↓
-IDFC saves Transaction ID, redirects customer to NSDL portal
+BIMBO Bank saves Transaction ID, redirects customer to NSDL portal
         ↓
-   [Customer completes KYC/nominee on NSDL's site — outside IDFC]
+   [Customer completes KYC/nominee on NSDL's site — outside BIMBO Bank]
         ↓
 NSDL calls back:
    ├── SUCCESS → /handleSuccessRedirect → save DP ID + Client ID → status: SUCCESS
@@ -129,7 +129,7 @@ NSDL calls back:
 | | NSDL | MOFSL |
 |---|---|---|
 | Account type | Demat only | 3-in-1 (Trading + Demat + Bank) |
-| Who validates customer first | IDFC (heavily) | MOFSL (IDFC just redirects) |
+| Who validates customer first | BIMBO Bank (heavily) | MOFSL (BIMBO Bank just redirects) |
 | Callback | Yes — success/failure | None |
 | Security | Digital signature | JWT token |
 

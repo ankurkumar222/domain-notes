@@ -12,7 +12,7 @@
 |---|---|---|
 | **Type** | Depository (holds shares) | Broker (Trading + Demat) |
 | **Account type** | Demat account only | 3-in-1 Account (Trading + Demat + Bank) |
-| **Process ownership** | IDFC initiates, NSDL completes | IDFC redirects, MOFSL handles the full journey |
+| **Process ownership** | BIMBO Bank initiates, NSDL completes | BIMBO Bank redirects, MOFSL handles the full journey |
 | **Callback** | Success/failure callbacks available | None — MOFSL owns the entire journey |
 | **Security** | Digital signature required | JWT token required |
 
@@ -60,7 +60,7 @@ GET /api/demat/v1/mofsl/status
 | `redirectUrl` | Optional — present **only** when `dematStatus` is `IN_PROGRESS` |
 
 **Internal flow**
-1. Customer requests status from the IDFC app.
+1. Customer requests status from the BIMBO Bank app.
 2. `demat-api` fetches the customer's PAN from their profile.
 3. Calls the **MOFSL PAN Check API** via **ESB Mule** → returns `NOT_EXISTS` / `IN_PROGRESS` / `EXISTS`.
 4. Branch on response:
@@ -94,7 +94,7 @@ POST /api/demat/v1/mofsl/redirecturi
    - Builds the redirect request payload, mapping the account number.
    - Calls the **MOFSL Redirect API** via **ESB Mule**, sending the account number → receives the redirect URL.
 3. Returns `redirectUrl` to the customer, who continues the journey on the MOFSL portal.
-4. **No callback** — MOFSL handles the rest of the journey end-to-end; IDFC isn't notified of the outcome via this flow.
+4. **No callback** — MOFSL handles the rest of the journey end-to-end; BIMBO Bank isn't notified of the outcome via this flow.
 
 ---
 
@@ -129,7 +129,7 @@ POST /api/demat/v2/mofsl/redirecturi
 
 **Status check**
 ```
-Customer → IDFC demat-api → Fetch PAN
+Customer → BIMBO Bank demat-api → Fetch PAN
         → MOFSL PAN Check API (ESB Mule)
         → NOT_EXISTS / IN_PROGRESS / EXISTS
         → if EXISTS: check Winsoft Demat status
@@ -138,14 +138,14 @@ Customer → IDFC demat-api → Fetch PAN
 
 **Account creation**
 ```
-Customer → IDFC App → POST /mofsl/redirecturi
+Customer → BIMBO Bank App → POST /mofsl/redirecturi
         → Validate Account Number
         → Validate Consent (V2 only)
         → Generate JWT Token
         → Call MOFSL Redirect API (ESB Mule)
         → Receive Redirect URL
         → Return Redirect URL
-        → Customer completes journey on MOFSL portal (outside IDFC)
+        → Customer completes journey on MOFSL portal (outside BIMBO Bank)
 ```
 
 ---

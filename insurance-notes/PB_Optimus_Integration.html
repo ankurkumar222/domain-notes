@@ -362,29 +362,29 @@ const SECTIONS = [
     id: "sec-architecture",
     code: "00",
     title: "Architecture & Hosting",
-    blurb: "SaaS model, dedicated AWS account, IDFC-owned code — PB is fully white-labeled and invisible to the end user.",
+    blurb: "SaaS model, dedicated AWS account, BIMBO Bank-owned code — PB is fully white-labeled and invisible to the end user.",
     learn: [
-      "Why IDFC chose a dedicated AWS account instead of a shared multi-tenant PB environment",
+      "Why BIMBO Bank chose a dedicated AWS account instead of a shared multi-tenant PB environment",
       "What \"white-labeled\" really means for this integration, end to end",
       "Who owns the code vs. who operates the infrastructure — and why that split matters",
       "The trade-offs of letting an external SaaS vendor build something inside your own cloud account"
     ],
     questions: [
-      "If PolicyBazaar manages and provisions the AWS account, but IDFC owns the source code and pipelines, who is actually accountable if there's a security incident — and how would you find out fast?",
-      "Why might a bank insist on \"not multi-tenant, dedicated for IDFC only\" even though it's more expensive than a shared SaaS model?",
+      "If PolicyBazaar manages and provisions the AWS account, but BIMBO Bank owns the source code and pipelines, who is actually accountable if there's a security incident — and how would you find out fast?",
+      "Why might a bank insist on \"not multi-tenant, dedicated for BIMBO Bank only\" even though it's more expensive than a shared SaaS model?",
       "What's one risk of being fully white-labeled (the user never sees \"PolicyBazaar\" anywhere) if something goes wrong mid-journey — how would a support agent even know which vendor to escalate to?",
-      "If you had to justify this architecture to an auditor in one sentence, what would you say is the single biggest control IDFC retains over its own AWS account?"
+      "If you had to justify this architecture to an auditor in one sentence, what would you say is the single biggest control BIMBO Bank retains over its own AWS account?"
     ],
     body: `
       <div class="table-wrap"><table>
         <tr><th>Aspect</th><th>Detail</th></tr>
-        <tr><td>Architecture Type</td><td>SaaS-based deployment, built &amp; managed by PolicyBazaar for IDFC Bank</td></tr>
+        <tr><td>Architecture Type</td><td>SaaS-based deployment, built &amp; managed by PolicyBazaar for BIMBO Bank</td></tr>
         <tr><td>Hosting</td><td>100% on AWS</td></tr>
-        <tr><td>AWS Account</td><td>Dedicated account in <b>IDFC's name</b> — not shared with PB's own environment</td></tr>
+        <tr><td>AWS Account</td><td>Dedicated account in <b>BIMBO Bank's name</b> — not shared with PB's own environment</td></tr>
         <tr><td>Provisioning</td><td>Fully managed/provisioned by PolicyBazaar</td></tr>
-        <tr><td>Multi-tenancy</td><td>None — built fully from scratch, dedicated to IDFC only</td></tr>
-        <tr><td>Code Ownership</td><td>Source repo + deployment pipelines owned by <b>IDFC</b></td></tr>
-        <tr><td>Branding</td><td>White-labeled — customer always experiences the journey as "IDFC" (branding, access, comms)</td></tr>
+        <tr><td>Multi-tenancy</td><td>None — built fully from scratch, dedicated to BIMBO Bank only</td></tr>
+        <tr><td>Code Ownership</td><td>Source repo + deployment pipelines owned by <b>BIMBO Bank</b></td></tr>
+        <tr><td>Branding</td><td>White-labeled — customer always experiences the journey as "BIMBO Bank" (branding, access, comms)</td></tr>
       </table></div>`,
     sketch: null,
     mermaid: null,
@@ -408,7 +408,7 @@ const SECTIONS = [
       "If you were asked to add a \"retry\" button for this flow, which single hop would you instrument first, and why?"
     ],
     body: `<p>The STS-token minted here is the thread that ties every later call (user-info, keep-alive, journey-status, clevertap-event) back to this user's session.</p>
-      <div class="note"><b>Confirmed contract (PB-side):</b> the final hop is PB's own <code>getRedirectionURL</code> API — <code>POST https://idfchealthqa.internalpb.com/api/Health/GetIDFCURL</code> with body <code>{Token: STS-token}</code>, returning <code>{RedirectionURL: ...}</code>. Note this is documented as a <b>POST</b>, not the <b>GET</b> shown above — see §15 Reconciliation. Full payload in §14.</div>`,
+      <div class="note"><b>Confirmed contract (PB-side):</b> the final hop is PB's own <code>getRedirectionURL</code> API — <code>POST https://idfchealthqa.internalpb.com/api/Health/GetBIMBO BankURL</code> with body <code>{Token: STS-token}</code>, returning <code>{RedirectionURL: ...}</code>. Note this is documented as a <b>POST</b>, not the <b>GET</b> shown above — see §15 Reconciliation. Full payload in §14.</div>`,
     sketch:
 `User --click--> OptimusApp --get-insuranceprovider-url--> Insurance Service
   --session-transfer--> EA/STS --> Integration Service --get-redirect-url--> Kong --> PB
@@ -444,17 +444,17 @@ OptimusApp opens WebView(url) -> SSO with STS-token -> PB journey loads`,
     id: "sec-flow2",
     code: "F2",
     title: "Flow 2 — PB Fetches User Info",
-    blurb: "Inside the WebView, PB calls back into IDFC via Kong to fetch the logged-in user's profile.",
+    blurb: "Inside the WebView, PB calls back into BIMBO Bank via Kong to fetch the logged-in user's profile.",
     learn: [
-      "Why PB calls back into IDFC instead of IDFC pushing data to PB upfront",
-      "How a Bearer token gets validated without IDFC ever calling PB's servers",
+      "Why PB calls back into BIMBO Bank instead of BIMBO Bank pushing data to PB upfront",
+      "How a Bearer token gets validated without BIMBO Bank ever calling PB's servers",
       "What \"claims\" means in this context and why they matter more than the raw token",
-      "Where personally identifiable customer data (PAN, address, CKYC) actually leaves IDFC's boundary"
+      "Where personally identifiable customer data (PAN, address, CKYC) actually leaves BIMBO Bank's boundary"
     ],
     questions: [
       "Why is \"pull\" (PB calls /user-info when it needs data) a safer design here than \"push\" (Optimus sending the full profile to PB upfront)?",
       "If the STS-token is valid but the underlying Optimus session has since logged out, what should happen — and does the current design actually guarantee that?",
-      "This is the exact moment a customer's PAN, address, and CKYC number leave IDFC's systems. What's the minimum data PB actually needs to sell insurance, and is this API sending more than that?",
+      "This is the exact moment a customer's PAN, address, and CKYC number leave BIMBO Bank's systems. What's the minimum data PB actually needs to sell insurance, and is this API sending more than that?",
       "What's the blast radius if this single API response were ever logged in plaintext by mistake on PB's side?"
     ],
     body: `<div class="note">If the STS-token has expired (session inactive), EA/STS marks it invalid and Insurance Service returns an <b>error</b> to PB instead of UserInfo.</div>
@@ -487,7 +487,7 @@ Insurance Service --UserInfo--> Kong --UserInfo--> PB`,
     id: "sec-flow3",
     code: "F3",
     title: "Flow 3 — Keep-Alive Loop",
-    blurb: "PB pings IDFC every ~3 minutes to keep the session/token from expiring mid-journey.",
+    blurb: "PB pings BIMBO Bank every ~3 minutes to keep the session/token from expiring mid-journey.",
     learn: [
       "Why a session needs an active heartbeat instead of just a long expiry time",
       "What \"every 3 minutes\" is really protecting against",
@@ -521,7 +521,7 @@ Insurance Service --UserInfo--> Kong --UserInfo--> PB`,
     id: "sec-flow4",
     code: "F4",
     title: "Flow 4 — Journey Status Update",
-    blurb: "When the user completes a purchase inside PB, PB proactively notifies IDFC.",
+    blurb: "When the user completes a purchase inside PB, PB proactively notifies BIMBO Bank.",
     learn: [
       "Why PB proactively tells Optimus about a purchase instead of waiting to be asked",
       "What \"for UCIC\" really means as a storage key, and why it's not the PB userId",
@@ -532,7 +532,7 @@ Insurance Service --UserInfo--> Kong --UserInfo--> PB`,
       "What happens to a real customer if this webhook-style call from PB never arrives — does Optimus have any fallback way to learn the purchase happened?",
       "Why save against UCIC rather than the external userId used everywhere else in the integration?",
       "If PB calls this API twice for the same purchase (a common webhook failure mode), is the current design safe to call twice, or could it cause a problem?",
-      "This is the one place PB pushes data into IDFC unprompted. Why does that make it more important to validate than the calls where PB is just reading data?"
+      "This is the one place PB pushes data into BIMBO Bank unprompted. Why does that make it more important to validate than the calls where PB is just reading data?"
     ],
     body: `<div class="note"><b>Confirmed contract:</b> real name is <code>policyStatusChangeEvent</code>, <code>POST insurance/v1/customerJourneyStatus</code>, payload <code>{userId, policyBought: true/false}</code>. The contract doc says auth is "same as other APIs (<b>with Mule</b>)" — worth confirming whether Mule fronts this call instead of/alongside Kong. See §15 Reconciliation.</div>`,
     sketch:
@@ -563,7 +563,7 @@ Insurance Service: saves policyBought=true against UCIC in its own DB`,
     questions: [
       "If PB owns \"resuming where the user left off,\" what exactly does PB need to have stored to make that true — and is there anything in this integration that confirms PB actually does?",
       "What would a user see if they abandoned the journey, came back two days later, and PB's own session had already expired on its side?",
-      "Whose job is it to test this exact scenario before go-live — IDFC's QA team, PB's QA team, or both together?"
+      "Whose job is it to test this exact scenario before go-live — BIMBO Bank's QA team, PB's QA team, or both together?"
     ],
     body: `<div class="note"><b>Resume-journey rule:</b> if the user abandons the journey midway and comes back to the Insurance page later, Optimus simply re-opens the WebView pointing at PB — PB owns resuming state, not Optimus.</div>`,
     sketch: `PB --redirect back to app--> OptimusApp`,
@@ -589,7 +589,7 @@ Insurance Service: saves policyBought=true against UCIC in its own DB`,
     ],
     questions: [
       "If this flag is ever wrong — set to false for someone who did buy, or true for someone who didn't — which direction of error is worse for the business, and why?",
-      "At IDFC's scale, what's the real cost (latency, PB API quota, money) of removing this DB short-circuit and always calling PB?",
+      "At BIMBO Bank's scale, what's the real cost (latency, PB API quota, money) of removing this DB short-circuit and always calling PB?",
       "\"Empty Response\" vs. an explicit \"no policies found\" message — does the current design tell the difference between \"you have no policies\" and \"we didn't even check\"?",
       "Why does this exact same caching idea show up again in Flow 7 at a completely different level of the stack? What does that repetition tell you about the design philosophy?"
     ],
@@ -692,7 +692,7 @@ Optimus --display dashboard--> User`,
     id: "sec-flow8",
     code: "F8",
     title: "Flow 8 — CleverTap Event Pipeline",
-    blurb: "PB emits behavioral events into IDFC's CleverTap instance — relayed entirely through IDFC's own middleware/event-bus stack.",
+    blurb: "PB emits behavioral events into BIMBO Bank's CleverTap instance — relayed entirely through BIMBO Bank's own middleware/event-bus stack.",
     learn: [
       "Why analytics events take a completely different path (Mule→Kafka) than every other call in this integration",
       "What problem an event bus like Kafka solves that a direct API call doesn't",
@@ -700,7 +700,7 @@ Optimus --display dashboard--> User`,
       "Why a \"TBD\" contract on a finalized design is a real engineering risk, not just a formality"
     ],
     questions: [
-      "Every other PB→IDFC call in this integration goes through Kong. Why does this one go through Mule and Kafka instead — what's fundamentally different about an analytics event vs. a user-info request?",
+      "Every other PB→BIMBO Bank call in this integration goes through Kong. Why does this one go through Mule and Kafka instead — what's fundamentally different about an analytics event vs. a user-info request?",
       "If Kafka is down for 10 minutes, what happens to the CleverTap events PB tried to send during that window — are they lost, retried, or queued somewhere?",
       "The STS-token is decoded here purely to attach a user id to a marketing event. Is that an appropriate use of a session-security token, or is it mixing two concerns that should stay separate?",
       "The flow design is \"finalized\" but the wire contract is \"TBD\" — what's the actual risk of building Kafka consumers and dashboards against a contract that could still change?"
@@ -713,7 +713,7 @@ Optimus --display dashboard--> User`,
         <li>The <b>STS-token is reused</b> here too — the same token minted in Flow 1 doubles as identity proof for analytics events, decoded via EA/STS as a "middleware" step inside Insurance Service.</li>
         <li><b>Event Tracker Service</b> is the actual abstraction that talks to CleverTap — Insurance Service doesn't call CleverTap's SDK/API directly.</li>
       </ul>
-      <div class="note"><b>Status:</b> the IDFC-side API name is locked in as <code>publishClevertapEvent</code>, but its full request/response contract is marked <b>TBD</b> in the written spec. The flow design above is agreed; the wire contract isn't finalized yet.</div>`,
+      <div class="note"><b>Status:</b> the BIMBO Bank-side API name is locked in as <code>publishClevertapEvent</code>, but its full request/response contract is marked <b>TBD</b> in the written spec. The flow design above is agreed; the wire contract isn't finalized yet.</div>`,
     sketch:
 `PB --POST /clevertap-event {eventData, sts-token}--> Mule (service-to-service)
 Mule --publish "clevertap-event"--> Kafka
@@ -750,7 +750,7 @@ Insurance Service --raise event--> Event Tracker Service --> CleverTap`,
     questions: [
       "Trace one STS-token from the moment it's minted in Flow 1 to the last flow it's used in — how many different services touch it, and does any one of them know its full lifecycle?",
       "If EA/STS Service itself goes down, which flows in this entire document stop working immediately, and which ones keep working a little longer on a cached \"valid\" result?",
-      "Now that we know getUserDetailsForPolicyBazaar needs a second EntAuth token, does every other PB→IDFC call need one too, or is this API a special case — and if it's special, why?"
+      "Now that we know getUserDetailsForPolicyBazaar needs a second EntAuth token, does every other PB→BIMBO Bank call need one too, or is this API a special case — and if it's special, why?"
     ],
     body: ``,
     sketch: null,
@@ -760,7 +760,7 @@ Insurance Service --raise event--> Event Tracker Service --> CleverTap`,
       rows: [
         ["1", "Optimus sends an <b>STS-token</b> to PB at redirect time (Flow 1)"],
         ["2", "STS-token is valid <b>only while the user's Optimus session is active</b>"],
-        ["3", "For every future PB→IDFC call (user-info, keep-alive, clevertap-event, etc.), PB must pass this STS-token in the request header/body"],
+        ["3", "For every future PB→BIMBO Bank call (user-info, keep-alive, clevertap-event, etc.), PB must pass this STS-token in the request header/body"],
         ["4", "EA/STS Service validates the token on every call — if the Optimus session has gone inactive, the token is invalid and an <b>error</b> is returned to PB"],
         ["5", "If valid, the requested data (e.g. UserInfo) is returned"],
         ["6", "PB keeps the session alive via the periodic <b>keep-alive</b> API exposed by Optimus (Flow 3)"],
@@ -774,12 +774,12 @@ Insurance Service --raise event--> Event Tracker Service --> CleverTap`,
     title: "Security Management",
     blurb: "Gateway-level authorization and end-to-end encryption — PB never has a direct path into internal services.",
     learn: [
-      "The three layers of protection stacked on top of every PB↔IDFC call: gateway auth, transport encryption, and network topology",
+      "The three layers of protection stacked on top of every PB↔BIMBO Bank call: gateway auth, transport encryption, and network topology",
       "Why \"no direct path into internal services\" is a design principle, not an accident",
       "The real difference between a hardcoded bearer token (QA-grade) and a production-grade auth scheme"
     ],
     questions: [
-      "If Kong's Ent Auth token were somehow leaked, what's the actual blast radius — every PB↔IDFC API, or only some of them?",
+      "If Kong's Ent Auth token were somehow leaked, what's the actual blast radius — every PB↔BIMBO Bank API, or only some of them?",
       "PB's own APIs currently use a hardcoded bearer token. What's the worst realistic outcome if that exact token shipped to production unchanged?",
       "\"Encrypted end-to-end\" between PB and Kong protects data in transit — what does it not protect against?"
     ],
@@ -787,7 +787,7 @@ Insurance Service --raise event--> Event Tracker Service --> CleverTap`,
       <ul>
         <li><b>Kong Gateway Protection:</b> all Kong-exposed APIs are protected by an <b>Enterprise Authorization (Ent Auth) token</b> — confirmed as the same <code>EntAuth token</code> referenced in the <code>getUserDetailsForPolicyBazaar</code> contract.</li>
         <li><b>Transport Security:</b> all communication between PolicyBazaar and Kong is <b>encrypted end-to-end</b> — both request and response payloads.</li>
-        <li>All PB traffic into IDFC's environment is forced through Kong (or Mule, for the async event path) — there is no direct path from PB into internal services or directly into CleverTap.</li>
+        <li>All PB traffic into BIMBO Bank's environment is forced through Kong (or Mule, for the async event path) — there is no direct path from PB into internal services or directly into CleverTap.</li>
         <li>PB's own APIs (<code>getRedirectionURL</code>, <code>getPolicies</code>) are currently protected by a <b>hardcoded bearer token</b> plus an <code>Origin</code> allow-list, per the written contract — worth confirming this is QA-only before go-live (see §15).</li>
       </ul>`,
     sketch: null,
@@ -801,7 +801,7 @@ Insurance Service --raise event--> Event Tracker Service --> CleverTap`,
     blurb: "Every actor across all 8 flows, and the role it plays.",
     learn: [
       "A clean mental map of all the actors in this integration and the one job each one does",
-      "Which components are IDFC's, which are PB's, and which sit in between",
+      "Which components are BIMBO Bank's, which are PB's, and which sit in between",
       "Why some components (Mule, Kong) sound similar but solve different problems"
     ],
     questions: [
@@ -816,18 +816,18 @@ Insurance Service --raise event--> Event Tracker Service --> CleverTap`,
       headers: ["Component", "Role"],
       rows: [
         ["User", "End customer using the OptimusApp"],
-        ["OptimusApp", "IDFC's mobile app — hosts the PB journey in a WebView"],
-        ["Insurance Service (Insurance-API)", "IDFC backend orchestrating the insurance journey; also the Kafka consumer for CleverTap events"],
+        ["OptimusApp", "BIMBO Bank's mobile app — hosts the PB journey in a WebView"],
+        ["Insurance Service (Insurance-API)", "BIMBO Bank backend orchestrating the insurance journey; also the Kafka consumer for CleverTap events"],
         ["EA/STS Service", "Mints &amp; validates the STS token; also decodes it to resolve user identity for event middleware"],
         ["Integration Service", "Talks to Kong to fetch redirect URLs / proxy calls to PB"],
-        ["User Profile Service", "Returns IDFC customer profile data"],
-        ["Kong", "API Gateway for synchronous PB ⇄ IDFC traffic — Ent Auth + TLS"],
+        ["User Profile Service", "Returns BIMBO Bank customer profile data"],
+        ["Kong", "API Gateway for synchronous PB ⇄ BIMBO Bank traffic — Ent Auth + TLS"],
         ["Mule", "ESB used for async CleverTap event ingress, and per the written contract, possibly fronting <code>getUserDetailsForPolicyBazaar</code> / <code>policyStatusChangeEvent</code> base URLs too (pending confirmation)"],
         ["Kafka", "Event bus — decouples PB event emission from Insurance Service processing"],
         ["Event Tracker Service", "Abstraction layer that actually pushes events into CleverTap"],
         ["Optimus DB", "Stores session/purchase flags such as <code>policyBought</code> / <code>userHasPoliciesWithPB</code>"],
-        ["Policybazaar (PB)", "White-labeled insurance journey provider (SaaS, AWS-hosted in IDFC's account)"],
-        ["CleverTap", "IDFC's marketing/behavioral-analytics platform (destination for PB events)"],
+        ["Policybazaar (PB)", "White-labeled insurance journey provider (SaaS, AWS-hosted in BIMBO Bank's account)"],
+        ["CleverTap", "BIMBO Bank's marketing/behavioral-analytics platform (destination for PB events)"],
         ["EntAuth API", "Separate token-minting API (owner: Rajesh, per contract doc) that PB must call before calling <code>getUserDetailsForPolicyBazaar</code>"]
       ]
     }
@@ -843,7 +843,7 @@ Insurance Service --raise event--> Event Tracker Service --> CleverTap`,
       "Why two of these six still aren't fully specified yet"
     ],
     questions: [
-      "Of these six APIs, which ones are PB calling IDFC, and which are IDFC calling PB — does the split surprise you given how \"white-labeled\" this product is supposed to be?",
+      "Of these six APIs, which ones are PB calling BIMBO Bank, and which are BIMBO Bank calling PB — does the split surprise you given how \"white-labeled\" this product is supposed to be?",
       "If you could only fully test two of these six APIs before go-live, which two would you pick, and why?"
     ],
     body: `<p>Full URLs, payloads, and error codes are in <a href="#sec-contracts" onclick="jumpTo(event,'sec-contracts')">§14 API Contracts — Detailed Payloads</a>.</p>`,
@@ -877,7 +877,7 @@ Insurance Service --raise event--> Event Tracker Service --> CleverTap`,
       "If this contract changes after PB's QA review, what's the blast radius across the rest of this document — how many other sections reference these exact field names?"
     ],
     body: `
-      <p><b>14.1 APIs exposed by IDFC</b></p>
+      <p><b>14.1 APIs exposed by BIMBO Bank</b></p>
 
       <p><b>a) getUserDetailsForPolicyBazaar</b></p>
       <ul>
@@ -935,7 +935,7 @@ Insurance Service --raise event--> Event Tracker Service --> CleverTap`,
 
       <p><b>a) getRedirectionURL</b></p>
       <pre class="sketch">curl --request POST \\
-  --url https://idfchealthqa.internalpb.com/api/Health/GetIDFCURL \\
+  --url https://idfchealthqa.internalpb.com/api/Health/GetBIMBO BankURL \\
   --header 'Authorization: Bearer {Hardcoded token}' \\
   --header 'Content-Type: application/json' \\
   --header 'Origin: &lt;allowed-origin&gt;' \\
@@ -981,7 +981,7 @@ Response:
     ],
     questions: [
       "Of these 8 discrepancies, which one would actually break the integration in production if left unresolved, versus which ones are just naming/documentation drift?",
-      "Whose job is it to resolve item #3 (Kong vs. Mule routing) — IDFC's platform team, PB's integration team, or does it need both in the same room?",
+      "Whose job is it to resolve item #3 (Kong vs. Mule routing) — BIMBO Bank's platform team, PB's integration team, or does it need both in the same room?",
       "If you had to ship with only 3 of these 8 items resolved, which 3 would you prioritize, and why?"
     ],
     body: ``,
@@ -1019,7 +1019,7 @@ Response:
     body: `
       <ul>
         <li><b>CleverTap integration</b> — design finalized (Flow 8), but the <code>publishClevertapEvent</code> wire contract is still <b>TBD</b>. Not yet part of MVP rollout.</li>
-        <li><b>PB redirection domain</b> — currently QA/temporary; pending PB sharing the production domain, then IDFC whitelisting + ISG temporary approval.</li>
+        <li><b>PB redirection domain</b> — currently QA/temporary; pending PB sharing the production domain, then BIMBO Bank whitelisting + ISG temporary approval.</li>
         <li><b>Base URL confirmation</b> — <code>insurance/v1/*</code> APIs are pending final base URL from the Mule team.</li>
         <li><b>Kong vs. Mule routing</b> — confirm which gateway layer fronts <code>getUserDetailsForPolicyBazaar</code> and <code>policyStatusChangeEvent</code>.</li>
         <li><b><code>getPolicies</code> contract</b> — two competing request shapes documented; needs to be narrowed to one.</li>
@@ -1056,8 +1056,8 @@ const MINDMAP = {
     {
       label: "00 · Architecture & Hosting", target: "sec-architecture",
       children: [
-        { label: "SaaS on AWS, dedicated IDFC account" },
-        { label: "White-labeled, IDFC-owned repo" },
+        { label: "SaaS on AWS, dedicated BIMBO Bank account" },
+        { label: "White-labeled, BIMBO Bank-owned repo" },
         { label: "Core services: OptimusApp, Insurance Svc, EA/STS, Integration Svc, User Profile Svc, Kong, PB" }
       ]
     },

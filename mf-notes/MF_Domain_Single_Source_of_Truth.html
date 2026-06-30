@@ -570,7 +570,7 @@ footer.docfoot{padding:40px 36px;color:var(--ink-faint);font-size:12.5px;}
   <details class="card" open>
     <summary><span class="tag tag-concept">Concept</span> Investment Account vs Folio — the exact distinction</summary>
     <div class="card-body">
-      <p><strong>Investment Account (Portfolio Code):</strong> a high-level relationship with the RTA (Registrar &amp; Transfer Agent — CAMS/KFintech). Created when a customer first registers with the RTA. On the bank side, the Portfolio Code is the main identifier for MF investments — it acts like a bridge between IDFC and the RTA world.</p>
+      <p><strong>Investment Account (Portfolio Code):</strong> a high-level relationship with the RTA (Registrar &amp; Transfer Agent — CAMS/KFintech). Created when a customer first registers with the RTA. On the bank side, the Portfolio Code is the main identifier for MF investments — it acts like a bridge between BIMBO Bank and the RTA world.</p>
       <p><strong>Folio:</strong> a specific holding account for a single mutual fund scheme — the customer's unique number inside one mutual fund house/RTA (e.g. an HDFC MF folio number, an SBI MF folio number). One customer with one Investment Account can have multiple folios.</p>
       <div class="kinsight"><strong>Portfolio Code = bank-side identity. Folio = MF house / RTA-side identity.</strong> If an API response shows <code>folios: []</code>, it means the investment account relationship exists, but the customer has no fund-specific holdings yet — a perfectly valid "new investor" state, not an error.</div>
     </div>
@@ -713,7 +713,7 @@ footer.docfoot{padding:40px 36px;color:var(--ink-faint);font-size:12.5px;}
     <div class="card-body">
       <p>Before publishing an order to Kafka, Optimus runs through, in order:</p>
       <div class="timeline">
-        <div class="t-item"><div class="t-label">1 · Authentication &amp; Customer Validation</div><div class="t-sub">Is the authenticated user a valid IDFC customer?</div></div>
+        <div class="t-item"><div class="t-label">1 · Authentication &amp; Customer Validation</div><div class="t-sub">Is the authenticated user a valid BIMBO Bank customer?</div></div>
         <div class="t-item"><div class="t-label">2 · Account Ownership</div><div class="t-sub">Does the provided savings account and portfolio code (IA) belong to this customer?</div></div>
         <div class="t-item"><div class="t-label">3 · Master Data Check</div><div class="t-sub">Validate fund details — RTA code, fund ID, type — against internal cached master data.</div></div>
         <div class="t-item"><div class="t-label">4 · KYC / FATCA Status</div><div class="t-sub">Checked via a dedicated KYC Status API, and cross-verified from the PSP Folio for UCIC WinSoft API.</div></div>

@@ -65,13 +65,13 @@ PolicyBazaar --(events)--> Mule --> Kafka --> Insurance Service --> Event Tracke
 
 | Aspect | Detail |
 |---|---|
-| **Architecture Type** | SaaS-based deployment, built & managed by PolicyBazaar for IDFC Bank |
+| **Architecture Type** | SaaS-based deployment, built & managed by PolicyBazaar for BIMBO Bank |
 | **Hosting** | 100% on AWS |
-| **AWS Account** | Dedicated account in **IDFC's name** — NOT shared with PB's own environment |
+| **AWS Account** | Dedicated account in **BIMBO Bank's name** — NOT shared with PB's own environment |
 | **Provisioning** | Fully managed/provisioned by PolicyBazaar |
-| **Multi-tenancy** | None — built fully from scratch, dedicated to IDFC only |
-| **Code Ownership** | Source repo + deployment pipelines owned by **IDFC** |
-| **Branding** | White-labeled — customer always experiences the journey as "IDFC" (branding, access, comms) — PB is invisible to the end user |
+| **Multi-tenancy** | None — built fully from scratch, dedicated to BIMBO Bank only |
+| **Code Ownership** | Source repo + deployment pipelines owned by **BIMBO Bank** |
+| **Branding** | White-labeled — customer always experiences the journey as "BIMBO Bank" (branding, access, comms) — PB is invisible to the end user |
 
 ---
 
@@ -337,7 +337,7 @@ Insurance Service --decode STS token (middleware)--> EA/STS Service
 Insurance Service --raise event--> Event Tracker Service --> CleverTap
 ```
 
-> **Status:** the IDFC-side API name is locked in as **`publishClevertapEvent`**, but the written contract doc marks its full request/response shape as **TBD**. The flow design above (Mule → Kafka → Insurance Service → Event Tracker) is agreed; the wire contract is not yet specified.
+> **Status:** the BIMBO Bank-side API name is locked in as **`publishClevertapEvent`**, but the written contract doc marks its full request/response shape as **TBD**. The flow design above (Mule → Kafka → Insurance Service → Event Tracker) is agreed; the wire contract is not yet specified.
 
 ---
 
@@ -347,7 +347,7 @@ Insurance Service --raise event--> Event Tracker Service --> CleverTap
 |---|---|
 | 1 | Optimus sends an **STS-token** to PB at redirect time (Flow 1) |
 | 2 | STS-token is valid **only while the user's Optimus session is active** |
-| 3 | For every future PB→IDFC call (user-info, keep-alive, clevertap-event, etc.), PB must pass this STS-token in the request header/body |
+| 3 | For every future PB→BIMBO Bank call (user-info, keep-alive, clevertap-event, etc.), PB must pass this STS-token in the request header/body |
 | 4 | EA/STS Service validates the token on every call — if the Optimus session has gone inactive, the token is treated as invalid and an **error** is returned to PB |
 | 5 | If valid, the requested data (e.g. UserInfo) is returned |
 | 6 | PB keeps the session alive via the periodic **keep-alive** API exposed by Optimus (Flow 3) |
@@ -359,7 +359,7 @@ Insurance Service --raise event--> Event Tracker Service --> CleverTap
 
 - **Kong Gateway Protection:** all Kong-exposed APIs are protected by an **Enterprise Authorization (Ent Auth) token** — this is the same `EntAuth token` referenced in the `getUserDetailsForPolicyBazaar` contract, confirming Kong's Ent Auth requirement is real and concrete, not just a diagram label.
 - **Transport Security:** all communication between PolicyBazaar and Kong is **encrypted end-to-end** — both request and response payloads.
-- All PB traffic into IDFC's environment is forced through Kong (or Mule, for the async event path) — there is no direct path from PB into internal services or directly into CleverTap.
+- All PB traffic into BIMBO Bank's environment is forced through Kong (or Mule, for the async event path) — there is no direct path from PB into internal services or directly into CleverTap.
 - PB's own APIs (`getRedirectionURL`, `getPolicies`) are currently protected by a **hardcoded bearer token** plus an `Origin` header allow-list, per the written contract — flagged in [§15](#15-reconciliation-needed-diagram-vs-written-contract) as worth revisiting before go-live (hardcoded tokens are typically a placeholder for QA, not a production-grade scheme).
 
 ---
@@ -369,18 +369,18 @@ Insurance Service --raise event--> Event Tracker Service --> CleverTap
 | Component | Role |
 |---|---|
 | **User** | End customer using the OptimusApp |
-| **OptimusApp** | IDFC's mobile app — hosts the PB journey in a WebView |
-| **Insurance Service (Insurance-API)** | IDFC backend orchestrating the insurance journey; also the Kafka consumer for CleverTap events |
+| **OptimusApp** | BIMBO Bank's mobile app — hosts the PB journey in a WebView |
+| **Insurance Service (Insurance-API)** | BIMBO Bank backend orchestrating the insurance journey; also the Kafka consumer for CleverTap events |
 | **EA/STS Service** | Mints & validates the STS token; also decodes it to resolve user identity for event middleware |
 | **Integration Service** | Talks to Kong to fetch redirect URLs / proxy calls to PB |
-| **User Profile Service** | Returns IDFC customer profile data |
-| **Kong** | API Gateway for synchronous PB ⇄ IDFC traffic — Ent Auth + TLS |
+| **User Profile Service** | Returns BIMBO Bank customer profile data |
+| **Kong** | API Gateway for synchronous PB ⇄ BIMBO Bank traffic — Ent Auth + TLS |
 | **Mule** | ESB used for async CleverTap event ingress, and per the contract doc, possibly fronting `getUserDetailsForPolicyBazaar` / `policyStatusChangeEvent` base URLs too (pending confirmation) |
 | **Kafka** | Event bus — decouples PB event emission from Insurance Service processing |
 | **Event Tracker Service** | Abstraction layer that actually pushes events into CleverTap |
 | **Optimus DB** | Stores session/purchase flags such as `policyBought` / `userHasPoliciesWithPB` |
-| **Policybazaar (PB)** | White-labeled insurance journey provider (SaaS, AWS-hosted in IDFC's account) |
-| **CleverTap** | IDFC's marketing/behavioral-analytics platform (destination for PB events) |
+| **Policybazaar (PB)** | White-labeled insurance journey provider (SaaS, AWS-hosted in BIMBO Bank's account) |
+| **CleverTap** | BIMBO Bank's marketing/behavioral-analytics platform (destination for PB events) |
 | **EntAuth API** | Separate token-minting API (owner: Rajesh, per contract doc) that PB must call before calling `getUserDetailsForPolicyBazaar` |
 
 ---
@@ -404,7 +404,7 @@ Insurance Service --raise event--> Event Tracker Service --> CleverTap
 
 > Source: API-contracts note by **Shreyas Mahajan**.
 
-### 14.1 APIs exposed by IDFC
+### 14.1 APIs exposed by BIMBO Bank
 
 #### a) `getUserDetailsForPolicyBazaar`
 
@@ -503,7 +503,7 @@ Insurance Service --raise event--> Event Tracker Service --> CleverTap
 - **Request (curl):**
   ```bash
   curl --request POST \
-    --url https://idfchealthqa.internalpb.com/api/Health/GetIDFCURL \
+    --url https://idfchealthqa.internalpb.com/api/Health/GetBIMBO BankURL \
     --header 'Authorization: Bearer {Hardcoded token}' \
     --header 'Content-Type: application/json' \
     --header 'Origin: <allowed-origin>' \
@@ -567,7 +567,7 @@ These are points where the original whiteboard sequence diagrams and the written
 ## 16. Future Scope & Open Items
 
 - **CleverTap integration** — design finalized (Flow 8), but the **`publishClevertapEvent` wire contract is still TBD**. Not yet part of MVP rollout.
-- **PB redirection domain** — currently QA/temporary; pending PB sharing the production domain, then IDFC whitelisting + ISG temporary approval.
+- **PB redirection domain** — currently QA/temporary; pending PB sharing the production domain, then BIMBO Bank whitelisting + ISG temporary approval.
 - **Base URL confirmation** — `insurance/v1/*` APIs are pending final base URL from the Mule team.
 - **Kong vs. Mule routing** — confirm which gateway layer fronts `getUserDetailsForPolicyBazaar` and `policyStatusChangeEvent` (see §15, items 2–3).
 - **`getPolicies` contract** — two competing request shapes documented; needs to be narrowed to one (see §15, item 4).
